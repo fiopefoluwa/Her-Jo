@@ -181,7 +181,18 @@ export function CirclePage() {
                   Pay Contribution
                 </Button>
               )}
-              <Button variant="outline">Circle Settings</Button>
+              <div className="flex items-center gap-3">
+                <Button
+                  asChild
+                  variant="outline"
+                >
+                  <Link to={`/group/${circle.id}`}>Group Details</Link>
+                </Button>
+                <Button variant="outline" asChild>
+                  <Link to={`/record-contribution/${circle.id}`}>Record Contribution</Link>
+                </Button>
+                <Button variant="outline">Circle Settings</Button>
+              </div>
             </div>
           </div>
 

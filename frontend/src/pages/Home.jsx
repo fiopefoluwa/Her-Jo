@@ -1,11 +1,154 @@
-import { Link } from "react-router";
-import { Button } from "./ui/button";
-import { ArrowRight, Shield, Users, TrendingUp, Sparkles } from "lucide-react";
-import { WovenDivider } from "./WovenDivider";
+import * as React from "react";
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import { Button } from "../components/ui/button";
+import {
+  ArrowRight,
+  Shield,
+  Users,
+  TrendingUp,
+  Sparkles,
+  ChevronRight,
+  ChevronLeft,
+} from "lucide-react";
+import { WovenDivider } from "../components/WovenDivider";
 import { motion } from "motion/react";
-import { ImageWithFallback } from "./figma/ImageWithFallback";
+import { ImageWithFallback } from "../components/ImageWithFallback";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "../components/ui/dialog";
 
-export function LandingPage() {
+export function Home() {
+  const [isDemoOpen, setIsDemoOpen] = useState(false);
+  const [demoStep, setDemoStep] = useState(0);
+
+  const demoSteps = [
+    {
+      title: "1. Create Your Savings Circle",
+      description:
+        "Form a digital Esusu/Ajo circle with family or trusted traders. Set custom contribution amounts and invite members seamlessly.",
+      visual: (
+        <div className="bg-card border border-border/40 p-6 rounded-xl space-y-4 shadow-inner max-w-sm mx-auto text-left">
+          <div className="font-playfair text-xl font-bold border-b border-border/40 pb-2 text-foreground">
+            Market Women Alliance
+          </div>
+          <div className="grid grid-cols-2 gap-4 text-sm text-muted-foreground">
+            <div>
+              <div>Monthly Contribution</div>
+              <div className="font-semibold text-foreground">₦50,000</div>
+            </div>
+            <div>
+              <div>Total Members</div>
+              <div className="font-semibold text-foreground">8 Members</div>
+            </div>
+            <div>
+              <div>Monthly Payout</div>
+              <div className="font-semibold text-foreground">₦400,000</div>
+            </div>
+            <div>
+              <div>Start Date</div>
+              <div className="font-semibold text-foreground">Jan 2026</div>
+            </div>
+          </div>
+          <div className="bg-primary/10 text-primary border border-primary/20 text-xs px-2 py-1 rounded text-center font-medium mt-2">
+            Active Cycle 1 of 8
+          </div>
+        </div>
+      ),
+    },
+    {
+      title: "2. Watch Your Trust Vessel Grow",
+      description:
+        "As you make on-time contributions, your Trust Score rises. This score is represented visually as a gorgeous traditional African clay vessel that becomes richer in detail.",
+      visual: (
+        <div className="flex flex-col items-center justify-center p-6 bg-card border border-border/40 rounded-xl max-w-sm mx-auto shadow-inner">
+          <div className="w-36 h-36 relative mb-4">
+            <svg viewBox="0 0 100 100" className="w-full h-full drop-shadow-md">
+              <defs>
+                <linearGradient
+                  id="demo-pot-grad"
+                  x1="0%"
+                  y1="0%"
+                  x2="100%"
+                  y2="100%"
+                >
+                  <stop offset="0%" stopColor="#B85C42" />
+                  <stop offset="100%" stopColor="#D4A574" />
+                </linearGradient>
+              </defs>
+              <path
+                d="M 50 15 C 35 15 25 25 25 45 C 25 65 35 85 50 85 C 65 85 75 65 75 45 C 75 25 65 15 50 15 Z"
+                fill="url(#demo-pot-grad)"
+                opacity="0.85"
+              />
+              <path
+                d="M 35 30 L 65 30"
+                stroke="#FFF"
+                strokeWidth="2"
+                strokeDasharray="3,3"
+                opacity="0.7"
+              />
+              <path
+                d="M 27 45 C 38 45 42 55 50 55 C 58 55 62 45 73 45"
+                stroke="#FFF"
+                strokeWidth="2"
+                opacity="0.8"
+              />
+              <circle
+                cx="50"
+                cy="45"
+                r="16"
+                fill="none"
+                stroke="#FFF"
+                strokeWidth="1.5"
+                strokeDasharray="5,2"
+                opacity="0.6"
+              />
+            </svg>
+          </div>
+          <div className="text-center">
+            <div className="text-xs text-muted-foreground uppercase tracking-widest mb-1">
+              Trust Score
+            </div>
+            <div className="font-playfair text-3xl font-bold text-primary">87 / 100</div>
+            <div className="text-xs text-secondary mt-1 font-semibold">"Excellent Standing"</div>
+          </div>
+        </div>
+      ),
+    },
+    {
+      title: "3. Transparent Rotation & Payouts",
+      description:
+        "When your turn arrives in the rotation schedule, you receive the full pooled payout instantly. The cycle continues transparently until all members are paid.",
+      visual: (
+        <div className="bg-card border border-border/40 p-4 rounded-xl space-y-3 shadow-inner max-w-sm mx-auto text-left text-sm">
+          <div className="flex items-center justify-between font-semibold border-b border-border/40 pb-2 text-foreground">
+            <span>Rotation Schedule</span>
+            <span className="text-xs text-accent">Cycle 2 of 8</span>
+          </div>
+          <div className="space-y-2">
+            <div className="flex justify-between items-center bg-accent/5 p-2 rounded border border-accent/20">
+              <span className="text-xs text-accent font-medium">✓ Amina Okafor (You)</span>
+              <span className="text-xs text-muted-foreground">Jan 15 (Paid)</span>
+            </div>
+            <div className="flex justify-between items-center bg-primary/10 p-2 rounded border border-primary/30 animate-pulse">
+              <span className="text-xs text-primary font-bold">● Bisi Adekunle</span>
+              <span className="text-xs text-primary font-medium">Feb 15 (Active)</span>
+            </div>
+            <div className="flex justify-between items-center opacity-60 p-2 rounded text-muted-foreground">
+              <span className="text-xs">Chika Nwosu</span>
+              <span className="text-xs">Mar 15 (Upcoming)</span>
+            </div>
+          </div>
+        </div>
+      ),
+    },
+  ];
+
   return (
     <div className="min-h-screen bg-background">
       {/* Navigation */}
@@ -17,18 +160,26 @@ export function LandingPage() {
             </div>
             <span className="font-playfair font-bold text-xl tracking-tight">HerJo</span>
           </div>
-          
+
           <div className="flex items-center gap-6">
-            <a href="#how-it-works" className="text-sm hover:text-primary transition-colors">
+            <a
+              href="#how-it-works"
+              className="text-sm hover:text-primary transition-colors"
+            >
               How it Works
             </a>
-            <a href="#trust" className="text-sm hover:text-primary transition-colors">
+            <a
+              href="#trust"
+              className="text-sm hover:text-primary transition-colors"
+            >
               Trust System
             </a>
-            <Link to="/dashboard">
-              <Button variant="outline" size="sm">Sign In</Button>
+            <Link to="/login">
+              <Button variant="outline" size="sm">
+                Sign In
+              </Button>
             </Link>
-            <Link to="/dashboard">
+            <Link to="/register">
               <Button size="sm" className="bg-primary hover:bg-primary/90">
                 Get Started
               </Button>
@@ -48,16 +199,16 @@ export function LandingPage() {
             <div className="inline-block mb-4 px-4 py-2 rounded-full bg-accent/10 border border-accent/20">
               <span className="text-sm text-accent">Modern Ajo • Digital Esusu</span>
             </div>
-            
+
             <h1 className="font-playfair font-bold text-5xl lg:text-6xl leading-tight mb-6">
               The Digital Fabric of Trust
             </h1>
-            
+
             <p className="text-lg text-muted-foreground mb-8 leading-relaxed">
-              HerJo brings the warmth of traditional savings circles into the modern era. 
-              Built on community, continuity, and shared responsibility — not cold transactions.
+              HerJo brings the warmth of traditional savings circles into the modern era. Built on community, continuity,
+              and shared responsibility — not cold transactions.
             </p>
-            
+
             <div className="flex flex-wrap gap-4">
               <Link to="/dashboard">
                 <Button size="lg" className="bg-primary hover:bg-primary/90 group">
@@ -65,11 +216,18 @@ export function LandingPage() {
                   <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </Button>
               </Link>
-              <Button size="lg" variant="outline">
+              <Button
+                size="lg"
+                variant="outline"
+                onClick={() => {
+                  setIsDemoOpen(true);
+                  setDemoStep(0);
+                }}
+              >
                 Watch Demo
               </Button>
             </div>
-            
+
             <div className="mt-12 grid grid-cols-3 gap-6">
               <div>
                 <div className="font-playfair text-3xl font-bold text-primary mb-1">12K+</div>
@@ -85,7 +243,7 @@ export function LandingPage() {
               </div>
             </div>
           </motion.div>
-          
+
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -99,11 +257,22 @@ export function LandingPage() {
                 className="w-full h-full object-cover"
               />
             </div>
-            
+
             {/* Decorative woven pattern overlay */}
             <div className="absolute -top-4 -right-4 w-24 h-24 opacity-20">
-              <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <pattern id="kente-pattern" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
+              <svg
+                viewBox="0 0 100 100"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <pattern
+                  id="kente-pattern"
+                  x="0"
+                  y="0"
+                  width="20"
+                  height="20"
+                  patternUnits="userSpaceOnUse"
+                >
                   <rect x="0" y="0" width="10" height="10" fill="#B85C42" />
                   <rect x="10" y="10" width="10" height="10" fill="#4A5D7F" />
                   <rect x="10" y="0" width="10" height="10" fill="#7A8F6B" />
@@ -128,7 +297,7 @@ export function LandingPage() {
             Not a transaction platform decorated with patterns. A trust system that grew from cultural memory.
           </p>
         </div>
-        
+
         <div className="grid md:grid-cols-3 gap-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -145,7 +314,7 @@ export function LandingPage() {
               Form or join a savings group with trusted members. Each circle sets its own contribution amount and rotation schedule.
             </p>
           </motion.div>
-          
+
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -161,7 +330,7 @@ export function LandingPage() {
               Make your agreed contributions on schedule. Each payment strengthens your trust score and the circle's bond.
             </p>
           </motion.div>
-          
+
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -192,13 +361,13 @@ export function LandingPage() {
           >
             <div className="aspect-square rounded-2xl overflow-hidden border border-border/40 shadow-xl">
               <ImageWithFallback
-                src="https://images.unsplash.com/photo-1534470717-233b39a41c54?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxBZnJpY2FuJTIwd29tYW4lMjB0cmFkZXIlMjBtYXJrZXQlMjBwcm9mZXNzaW9uYWx8ZW58MXx8fHwxNzgyMjA4NzE2fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral"
+                src="https://images.unsplash.com/photo-1534470717-233b39a41c54?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxBZnJpY2FuJTIwd29tZW4lMjB0cmFkZXIlMjBtYXJrZXQlMjBwcm9mZXNzaW9uYWx8ZW58MXx8fHwxNzgyMjA4NzE2fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral"
                 alt="African woman professional trader"
                 className="w-full h-full object-cover"
               />
             </div>
           </motion.div>
-          
+
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -208,10 +377,10 @@ export function LandingPage() {
               Trust That Grows Like Woven Fabric
             </h2>
             <p className="text-lg text-muted-foreground mb-8 leading-relaxed">
-              Your Trust Score isn't a number on a screen. It's represented as a handcrafted pot 
+              Your Trust Score isn't a number on a screen. It's represented as a handcrafted pot
               that becomes more intricate and beautiful with each contribution you make.
             </p>
-            
+
             <div className="space-y-4">
               <div className="flex gap-4">
                 <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
@@ -224,7 +393,7 @@ export function LandingPage() {
                   </p>
                 </div>
               </div>
-              
+
               <div className="flex gap-4">
                 <div className="w-10 h-10 rounded-lg bg-secondary/10 flex items-center justify-center flex-shrink-0">
                   <Users className="w-5 h-5 text-secondary" />
@@ -236,7 +405,7 @@ export function LandingPage() {
                   </p>
                 </div>
               </div>
-              
+
               <div className="flex gap-4">
                 <div className="w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center flex-shrink-0">
                   <Sparkles className="w-5 h-5 text-accent" />
@@ -268,7 +437,7 @@ export function LandingPage() {
           <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
             Experience savings the way it was meant to be — rooted in trust, community, and cultural continuity.
           </p>
-          
+
           <Link to="/dashboard">
             <Button size="lg" className="bg-primary hover:bg-primary/90 group">
               Create Your First Circle
@@ -289,44 +458,151 @@ export function LandingPage() {
                 </div>
                 <span className="font-playfair font-bold tracking-tight">HerJo</span>
               </div>
-              <p className="text-sm text-muted-foreground">
-                Modern savings circles rooted in tradition.
-              </p>
+              <p className="text-sm text-muted-foreground">Modern savings circles rooted in tradition.</p>
             </div>
-            
+
             <div>
               <h4 className="font-semibold mb-3">Product</h4>
               <div className="space-y-2 text-sm text-muted-foreground">
-                <div><a href="#" className="hover:text-foreground transition-colors">How it Works</a></div>
-                <div><a href="#" className="hover:text-foreground transition-colors">Trust System</a></div>
-                <div><a href="#" className="hover:text-foreground transition-colors">Pricing</a></div>
+                <div>
+                  <a href="#" className="hover:text-foreground transition-colors">
+                    How it Works
+                  </a>
+                </div>
+                <div>
+                  <a href="#" className="hover:text-foreground transition-colors">
+                    Trust System
+                  </a>
+                </div>
+                <div>
+                  <a href="#" className="hover:text-foreground transition-colors">
+                    Pricing
+                  </a>
+                </div>
               </div>
             </div>
-            
+
             <div>
               <h4 className="font-semibold mb-3">Company</h4>
               <div className="space-y-2 text-sm text-muted-foreground">
-                <div><a href="#" className="hover:text-foreground transition-colors">About Us</a></div>
-                <div><a href="#" className="hover:text-foreground transition-colors">Careers</a></div>
-                <div><a href="#" className="hover:text-foreground transition-colors">Contact</a></div>
+                <div>
+                  <a href="#" className="hover:text-foreground transition-colors">
+                    About Us
+                  </a>
+                </div>
+                <div>
+                  <a href="#" className="hover:text-foreground transition-colors">
+                    Careers
+                  </a>
+                </div>
+                <div>
+                  <a href="#" className="hover:text-foreground transition-colors">
+                    Contact
+                  </a>
+                </div>
               </div>
             </div>
-            
+
             <div>
               <h4 className="font-semibold mb-3">Legal</h4>
               <div className="space-y-2 text-sm text-muted-foreground">
-                <div><a href="#" className="hover:text-foreground transition-colors">Privacy</a></div>
-                <div><a href="#" className="hover:text-foreground transition-colors">Terms</a></div>
-                <div><a href="#" className="hover:text-foreground transition-colors">Security</a></div>
+                <div>
+                  <a href="#" className="hover:text-foreground transition-colors">
+                    Privacy
+                  </a>
+                </div>
+                <div>
+                  <a href="#" className="hover:text-foreground transition-colors">
+                    Terms
+                  </a>
+                </div>
+                <div>
+                  <a href="#" className="hover:text-foreground transition-colors">
+                    Security
+                  </a>
+                </div>
               </div>
             </div>
           </div>
-          
+
           <div className="mt-12 pt-8 border-t border-border/40 text-center text-sm text-muted-foreground">
             © 2026 HerJo. Built with trust, continuity, and cultural memory.
           </div>
         </div>
       </footer>
+
+      {/* Interactive Demo Walkthrough Dialog */}
+      <Dialog open={isDemoOpen} onOpenChange={setIsDemoOpen}>
+        <DialogContent className="sm:max-w-lg bg-card border-border/40 text-center p-8">
+          <DialogHeader>
+            <DialogTitle className="font-playfair text-3xl font-bold text-foreground">
+              {demoSteps[demoStep].title}
+            </DialogTitle>
+            <DialogDescription className="text-muted-foreground mt-2 text-sm leading-relaxed max-w-md mx-auto">
+              {demoSteps[demoStep].description}
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="my-8 py-4 flex items-center justify-center min-h-[220px]">
+            {demoSteps[demoStep].visual}
+          </div>
+
+          <div className="flex items-center justify-between border-t border-border/40 pt-6 mt-4">
+            <div className="flex gap-2">
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={() => setDemoStep((prev) => Math.max(0, prev - 1))}
+                disabled={demoStep === 0}
+                type="button"
+              >
+                <ChevronLeft className="w-4 h-4" />
+              </Button>
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={() =>
+                  setDemoStep((prev) =>
+                    Math.min(demoSteps.length - 1, prev + 1)
+                  )
+                }
+                disabled={demoStep === demoSteps.length - 1}
+                type="button"
+              >
+                <ChevronRight className="w-4 h-4" />
+              </Button>
+            </div>
+
+            <div className="flex items-center gap-1.5">
+              {demoSteps.map((_, i) => (
+                <div
+                  key={i}
+                  className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${
+                    i === demoStep ? "bg-primary scale-110" : "bg-muted"
+                  }`}
+                />
+              ))}
+            </div>
+
+            {demoStep === demoSteps.length - 1 ? (
+              <Link to="/dashboard">
+                <Button className="bg-primary hover:bg-primary/90 font-medium">
+                  Get Started <ArrowRight className="w-4 h-4 ml-1.5" />
+                </Button>
+              </Link>
+            ) : (
+              <Button
+                className="bg-primary hover:bg-primary/90 font-medium"
+                onClick={() => setDemoStep((prev) => prev + 1)}
+                type="button"
+              >
+                Next Step <ChevronRight className="w-4 h-4 ml-1.5" />
+              </Button>
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
+
