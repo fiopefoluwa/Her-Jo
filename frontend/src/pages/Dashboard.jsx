@@ -100,7 +100,6 @@ export function Dashboard() {
       return;
     }
 
-
     try {
       const response = await fetch("/api/circles", {
         method: "POST",
@@ -151,6 +150,7 @@ export function Dashboard() {
           </Link>
 
           <nav className="flex items-center gap-6">
+
             <Link to="/dashboard" className="text-sm font-medium text-primary">
               Dashboard
             </Link>
@@ -170,7 +170,11 @@ export function Dashboard() {
             <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center">
               <span className="text-sm font-semibold text-primary">AO</span>
             </div>
+
+            {/* Dev-only role switch (mock mode) */}
+            <span className="hidden" />
           </nav>
+
         </div>
       </header>
 
