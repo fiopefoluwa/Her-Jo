@@ -20,16 +20,10 @@ import { Textarea } from "../components/ui/textarea";
 import { Label } from "../components/ui/label";
 
 export function Dashboard() {
-  const [userProfile, setUserProfile] = useState({
-    name: "Amina Okafor",
-    trustScore: 87,
-    totalSaved: "₦340,000",
-    activeCycles: 3,
-    completedCycles: 12,
-  });
-
+  const [userProfile, setUserProfile] = useState(null);
   const [savingsCircles, setSavingsCircles] = useState([]);
   const [recentActivity, setRecentActivity] = useState([]);
+
   const [loading, setLoading] = useState(true);
 
   // Dialog state
@@ -38,6 +32,7 @@ export function Dashboard() {
   const [description, setDescription] = useState("");
   const [monthlyContribution, setMonthlyContribution] = useState("");
   const [members, setMembers] = useState("6");
+
 
   const fetchUserProfile = async () => {
     try {
@@ -92,11 +87,19 @@ export function Dashboard() {
   }, []);
 
   const handleCreateCircle = async (e) => {
-    e.preventDefault();
+    // Extra guard: if this handler is ever invoked via a non-submit click,
+    // prevent accidental navigation.
+    e?.preventDefault?.();
+
+    if (e && e.nativeEvent && typeof e.nativeEvent.stopPropagation === "function") {
+      e.nativeEvent.stopPropagation();
+    }
+
     if (!name || !monthlyContribution) {
       toast.error("Please enter a Circle Name and Contribution amount");
       return;
     }
+
 
     try {
       const response = await fetch("/api/circles", {
@@ -179,8 +182,9 @@ export function Dashboard() {
           className="mb-12"
         >
           <h1 className="font-playfair font-bold text-4xl mb-2">
-            Welcome back, {userProfile.name.split(" ")[0]}
+            Welcome back, {userProfile?.name ? userProfile.name.split(" ")[0] : ""}
           </h1>
+
           <p className="text-muted-foreground">
             Your savings journey continues to grow stronger with each contribution
           </p>
@@ -200,7 +204,8 @@ export function Dashboard() {
                 </div>
                 <div className="text-sm text-muted-foreground">Total Saved</div>
               </div>
-              <div className="font-playfair text-3xl font-bold">{userProfile.totalSaved}</div>
+              <div className="font-playfair text-3xl font-bold">{userProfile?.totalSaved ?? "₦0"}</div>
+
             </Card>
           </motion.div>
 
@@ -216,7 +221,8 @@ export function Dashboard() {
                 </div>
                 <div className="text-sm text-muted-foreground">Active Circles</div>
               </div>
-              <div className="font-playfair text-3xl font-bold">{userProfile.activeCycles}</div>
+              <div className="font-playfair text-3xl font-bold">{userProfile?.activeCycles ?? 0}</div>
+
             </Card>
           </motion.div>
 
@@ -232,7 +238,8 @@ export function Dashboard() {
                 </div>
                 <div className="text-sm text-muted-foreground">Completed</div>
               </div>
-              <div className="font-playfair text-3xl font-bold">{userProfile.completedCycles}</div>
+              <div className="font-playfair text-3xl font-bold">{userProfile?.completedCycles ?? 0}</div>
+
             </Card>
           </motion.div>
 
@@ -242,9 +249,10 @@ export function Dashboard() {
             transition={{ delay: 0.4 }}
           >
             <Card className="p-6 border-border/40 bg-gradient-to-br from-primary/5 to-accent/5">
-              <div className="text-sm text-muted-foreground mb-2">Trust Score</div>
+                <div className="text-sm text-muted-foreground mb-2">Trust Score</div>
               <div className="font-playfair text-3xl font-bold text-primary mb-1">
-                {userProfile.trustScore}
+                {userProfile?.trustScore ?? 0}
+
               </div>
               <div className="text-xs text-muted-foreground">Excellent standing</div>
             </Card>
@@ -446,8 +454,8 @@ export function Dashboard() {
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.3 }}
             >
-              <Card className="p-8 border-border/40 bg-gradient-to-br from-card to-muted/20">
-                <TrustScore score={userProfile.trustScore} />
+                <Card className="p-8 border-border/40 bg-gradient-to-br from-card to-muted/20">
+                <TrustScore score={userProfile?.trustScore ?? 0} />
               </Card>
             </motion.div>
 
