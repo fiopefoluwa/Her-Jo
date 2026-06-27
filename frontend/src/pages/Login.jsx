@@ -96,7 +96,7 @@ export default function Login() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full flex items-center justify-center gap-2 bg-terracotta-600 text-white py-3 rounded-xl font-medium hover:bg-terracotta-700 transition shadow-sm disabled:opacity-60"
+              className="w-full flex items-center justify-center gap-2 bg-terracotta-600 text-black py-3 rounded-xl font-medium hover:bg-terracotta-700 transition shadow-sm disabled:opacity-60"
             >
               {loading && <Loader2 className="w-4 h-4 animate-spin" />}
               {loading ? 'Logging in…' : 'Log in'}
