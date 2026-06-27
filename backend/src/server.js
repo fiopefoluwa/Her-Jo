@@ -7,6 +7,7 @@ import usersRouter from "./routes/users.js";
 import circlesRouter from "./routes/circles.js";
 import contributionsRouter from "./routes/contributions.js";
 import invitesRouter from "./routes/invites.js";
+import paymentsRouter, { webhookHandler } from "./routes/payments.js";
 import { startPayoutScheduler } from "./jobs/payoutScheduler.js";
 
 const app = express();
@@ -15,9 +16,21 @@ const PORT = process.env.PORT || 3001;
 // ── Middleware ────────────────────────────────────────────────────────────────
 
 app.use(cors({
-  origin: ["http://localhost:5173", "http://localhost:3000"],
+  origin: [
+    process.env.FRONTEND_URL || "http://localhost:5173",
+    "http://localhost:3000",
+  ],
   credentials: true,
 }));
+
+// ── Paystack webhook — raw body BEFORE express.json() ────────────────────────
+// Paystack signature verification requires the raw request body.
+app.post(
+  "/api/payments/webhook",
+  express.raw({ type: "application/json" }),
+  webhookHandler
+);
+
 app.use(express.json());
 
 // ── Public routes (no auth required) ─────────────────────────────────────────
@@ -30,7 +43,7 @@ app.get("/api/health", (req, res) => {
   res.json({
     status: "ok",
     name: "HerJo API",
-    version: "2.0.0",
+    version: "3.0.0",
     timestamp: new Date().toISOString(),
   });
 });
@@ -41,6 +54,7 @@ app.use("/api", authMiddleware);
 app.use("/api/users", usersRouter);
 app.use("/api/circles", circlesRouter);
 app.use("/api/contributions", contributionsRouter);
+app.use("/api/payments", paymentsRouter);
 
 // ── 404 handler ───────────────────────────────────────────────────────────────
 
@@ -51,11 +65,11 @@ app.use("/api/*", (req, res) => {
 // ── Start ─────────────────────────────────────────────────────────────────────
 
 app.listen(PORT, () => {
-  console.log(`\n  🏺 HerJo API Server v2.0`);
+  console.log(`\n  🏺 HerJo API Server v3.0`);
   console.log(`  ─────────────────────────`);
   console.log(`  Local:      http://localhost:${PORT}`);
   console.log(`  Health:     http://localhost:${PORT}/api/health`);
-  console.log(`  Register:   POST http://localhost:${PORT}/api/auth/register`);
-  console.log(`  Login:      POST http://localhost:${PORT}/api/auth/login\n`);
+  console.log(`  Webhook:    POST http://localhost:${PORT}/api/payments/webhook`);
+  console.log(`  Docs:       See README for full endpoint list\n`);
   startPayoutScheduler();
 });

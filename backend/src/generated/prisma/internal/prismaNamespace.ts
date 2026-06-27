@@ -388,6 +388,7 @@ export const ModelName = {
   Circle: 'Circle',
   CircleMember: 'CircleMember',
   Contribution: 'Contribution',
+  Escrow: 'Escrow',
   Activity: 'Activity',
   Invite: 'Invite'
 } as const
@@ -405,7 +406,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "circle" | "circleMember" | "contribution" | "activity" | "invite"
+    modelProps: "user" | "circle" | "circleMember" | "contribution" | "escrow" | "activity" | "invite"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -705,6 +706,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    Escrow: {
+      payload: Prisma.$EscrowPayload<ExtArgs>
+      fields: Prisma.EscrowFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.EscrowFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EscrowPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.EscrowFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EscrowPayload>
+        }
+        findFirst: {
+          args: Prisma.EscrowFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EscrowPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.EscrowFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EscrowPayload>
+        }
+        findMany: {
+          args: Prisma.EscrowFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EscrowPayload>[]
+        }
+        create: {
+          args: Prisma.EscrowCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EscrowPayload>
+        }
+        createMany: {
+          args: Prisma.EscrowCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.EscrowCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EscrowPayload>[]
+        }
+        delete: {
+          args: Prisma.EscrowDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EscrowPayload>
+        }
+        update: {
+          args: Prisma.EscrowUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EscrowPayload>
+        }
+        deleteMany: {
+          args: Prisma.EscrowDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.EscrowUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.EscrowUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EscrowPayload>[]
+        }
+        upsert: {
+          args: Prisma.EscrowUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EscrowPayload>
+        }
+        aggregate: {
+          args: Prisma.EscrowAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateEscrow>
+        }
+        groupBy: {
+          args: Prisma.EscrowGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.EscrowGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.EscrowCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.EscrowCountAggregateOutputType> | number
+        }
+      }
+    }
     Activity: {
       payload: Prisma.$ActivityPayload<ExtArgs>
       fields: Prisma.ActivityFieldRefs
@@ -897,6 +972,8 @@ export const UserScalarFieldEnum = {
   passwordHash: 'passwordHash',
   trustScore: 'trustScore',
   avatar: 'avatar',
+  bankAccount: 'bankAccount',
+  paystackRecipientCode: 'paystackRecipientCode',
   joinedDate: 'joinedDate',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -909,7 +986,9 @@ export const CircleScalarFieldEnum = {
   id: 'id',
   name: 'name',
   description: 'description',
+  leaderId: 'leaderId',
   monthlyContribution: 'monthlyContribution',
+  frequency: 'frequency',
   status: 'status',
   currentCycle: 'currentCycle',
   totalCycles: 'totalCycles',
@@ -942,10 +1021,28 @@ export const ContributionScalarFieldEnum = {
   circleId: 'circleId',
   amount: 'amount',
   note: 'note',
+  paymentType: 'paymentType',
+  status: 'status',
+  paystackRef: 'paystackRef',
+  dueDate: 'dueDate',
+  verifiedAt: 'verifiedAt',
+  verifiedById: 'verifiedById',
   createdAt: 'createdAt'
 } as const
 
 export type ContributionScalarFieldEnum = (typeof ContributionScalarFieldEnum)[keyof typeof ContributionScalarFieldEnum]
+
+
+export const EscrowScalarFieldEnum = {
+  id: 'id',
+  circleId: 'circleId',
+  balance: 'balance',
+  locked: 'locked',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type EscrowScalarFieldEnum = (typeof EscrowScalarFieldEnum)[keyof typeof EscrowScalarFieldEnum]
 
 
 export const ActivityScalarFieldEnum = {
@@ -1145,6 +1242,7 @@ export type GlobalOmitConfig = {
   circle?: Prisma.CircleOmit
   circleMember?: Prisma.CircleMemberOmit
   contribution?: Prisma.ContributionOmit
+  escrow?: Prisma.EscrowOmit
   activity?: Prisma.ActivityOmit
   invite?: Prisma.InviteOmit
 }

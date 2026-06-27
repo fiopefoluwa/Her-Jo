@@ -1,16 +1,17 @@
 import { Router } from "express";
+import { randomUUID } from "crypto";
 import prisma from "../lib/prisma.js";
+import { createTransferRecipient, initiateTransfer } from "../lib/paystack.js";
+import { applyCycleCompletionBonus } from "../lib/trustScore.js";
 
 const router = Router();
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
-/** Format a circle from the DB into the shape the frontend expects */
 function formatCircle(circle, currentUserId, members) {
   const totalPool = circle.monthlyContribution * circle.totalCycles;
   const sortedMembers = [...members].sort((a, b) => a.position - b.position);
 
-  // Active slot = first member whose payout hasn't been received yet
   const activeSlot = sortedMembers.find((m) => !m.payoutReceived);
   const nextPayoutName = activeSlot
     ? activeSlot.userId === currentUserId
@@ -28,6 +29,9 @@ function formatCircle(circle, currentUserId, members) {
     id: circle.id,
     name: circle.name,
     description: circle.description,
+    leaderId: circle.leaderId,
+    isLeader: circle.leaderId === currentUserId,
+    frequency: circle.frequency,
     members: members.length,
     monthlyContribution: circle.monthlyContribution,
     monthlyContributionFormatted: `₦${circle.monthlyContribution.toLocaleString()}`,
@@ -38,8 +42,16 @@ function formatCircle(circle, currentUserId, members) {
     status: circle.status,
     currentCycle,
     totalCycles: circle.totalCycles,
-    startDate: new Date(circle.startDate).toLocaleDateString("en-US", { month: "long", year: "numeric" }),
-    endDate: new Date(circle.endDate).toLocaleDateString("en-US", { month: "long", year: "numeric" }),
+    startDate: new Date(circle.startDate).toLocaleDateString("en-US", {
+      month: "long",
+      year: "numeric",
+    }),
+    endDate: new Date(circle.endDate).toLocaleDateString("en-US", {
+      month: "long",
+      year: "numeric",
+    }),
+    escrowBalance: circle.escrow?.balance ?? 0,
+    escrowBalanceFormatted: `₦${(circle.escrow?.balance ?? 0).toLocaleString()}`,
     membersList: sortedMembers.map((m) => ({
       id: m.id,
       userId: m.userId,
@@ -59,14 +71,18 @@ function formatCircle(circle, currentUserId, members) {
         ? "active"
         : "upcoming",
       date: new Date(m.scheduledPayoutDate).toLocaleDateString("en-US", {
-        month: "short", day: "numeric", year: "numeric",
+        month: "short",
+        day: "numeric",
+        year: "numeric",
       }),
     })),
   };
 }
 
 const memberInclude = {
-  include: { user: { select: { id: true, name: true, avatar: true, trustScore: true } } },
+  include: {
+    user: { select: { id: true, name: true, avatar: true, trustScore: true } },
+  },
 };
 
 // ─── GET /api/circles ─────────────────────────────────────────────────────────
@@ -75,12 +91,11 @@ router.get("/", async (req, res) => {
   try {
     const userId = req.user.id;
 
-    // Only return circles this user belongs to
     const memberships = await prisma.circleMember.findMany({
       where: { userId },
       include: {
         circle: {
-          include: { members: memberInclude },
+          include: { members: memberInclude, escrow: true },
         },
       },
     });
@@ -89,7 +104,6 @@ router.get("/", async (req, res) => {
       formatCircle(m.circle, userId, m.circle.members)
     );
 
-    // Remove membersList and rotationSchedule from list view
     return res.json(
       circles.map(({ membersList, rotationSchedule, ...c }) => c)
     );
@@ -106,7 +120,7 @@ router.get("/:id", async (req, res) => {
     const userId = req.user.id;
     const circle = await prisma.circle.findUnique({
       where: { id: req.params.id },
-      include: { members: memberInclude },
+      include: { members: memberInclude, escrow: true },
     });
 
     if (!circle) return res.status(404).json({ error: "Circle not found" });
@@ -118,10 +132,76 @@ router.get("/:id", async (req, res) => {
   }
 });
 
+// ─── GET /api/circles/:id/rotation ────────────────────────────────────────────
+
+router.get("/:id/rotation", async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const circle = await prisma.circle.findUnique({
+      where: { id: req.params.id },
+      include: {
+        members: {
+          orderBy: { position: "asc" },
+          include: {
+            user: { select: { id: true, name: true, avatar: true, trustScore: true } },
+          },
+        },
+        escrow: true,
+      },
+    });
+
+    if (!circle) return res.status(404).json({ error: "Circle not found" });
+
+    const membership = await prisma.circleMember.findUnique({
+      where: { userId_circleId: { userId, circleId: circle.id } },
+    });
+    if (!membership) {
+      return res.status(403).json({ error: "You are not a member of this circle." });
+    }
+
+    const activeSlot = circle.members.find((m) => !m.payoutReceived);
+    const completedCount = circle.members.filter((m) => m.payoutReceived).length;
+
+    return res.json({
+      circleId: circle.id,
+      circleName: circle.name,
+      frequency: circle.frequency,
+      currentCycle: completedCount + 1,
+      totalCycles: circle.totalCycles,
+      escrowBalance: circle.escrow?.balance ?? 0,
+      escrowBalanceFormatted: `₦${(circle.escrow?.balance ?? 0).toLocaleString()}`,
+      rotation: circle.members.map((m) => ({
+        position: m.position,
+        userId: m.userId,
+        name: m.userId === userId ? "You" : m.user.name,
+        avatar: m.user.avatar,
+        trustScore: m.user.trustScore,
+        scheduledPayoutDate: m.scheduledPayoutDate,
+        scheduledPayoutDateFormatted: new Date(m.scheduledPayoutDate).toLocaleDateString("en-US", {
+          month: "short",
+          day: "numeric",
+          year: "numeric",
+        }),
+        payoutReceived: m.payoutReceived,
+        payoutReceivedAt: m.payoutReceivedAt,
+        contributionStatus: m.payoutReceived
+          ? "completed"
+          : m === activeSlot
+          ? "active"
+          : "upcoming",
+        isYou: m.userId === userId,
+      })),
+    });
+  } catch (err) {
+    console.error("GET /circles/:id/rotation error:", err);
+    return res.status(500).json({ error: "Failed to fetch rotation." });
+  }
+});
+
 // ─── POST /api/circles ────────────────────────────────────────────────────────
 
 router.post("/", async (req, res) => {
-  const { name, description, monthlyContribution, members: membersCount } = req.body;
+  const { name, description, monthlyContribution, members: membersCount, frequency } = req.body;
   const userId = req.user.id;
 
   if (!name || !monthlyContribution) {
@@ -135,6 +215,11 @@ router.post("/", async (req, res) => {
     return res.status(400).json({ error: "Monthly contribution must be a positive number." });
   }
 
+  const freq = frequency || "monthly";
+  if (!["monthly", "weekly", "biweekly"].includes(freq)) {
+    return res.status(400).json({ error: "frequency must be monthly, weekly, or biweekly." });
+  }
+
   try {
     const startDate = new Date();
     const endDate = new Date(startDate);
@@ -144,25 +229,32 @@ router.post("/", async (req, res) => {
       data: {
         name: name.trim(),
         description: description?.trim() || "A culturally grounded savings circle.",
+        leaderId: userId,
         monthlyContribution: contributionNum,
+        frequency: freq,
         totalCycles: membersNum,
         startDate,
         endDate,
         status: "active",
-        // Create the creator as the first (position 1) member
         members: {
           create: {
             userId,
             position: 1,
             memberStatus: "pending",
-            scheduledPayoutDate: new Date(startDate.getFullYear(), startDate.getMonth() + 1, 15),
+            scheduledPayoutDate: new Date(
+              startDate.getFullYear(),
+              startDate.getMonth() + 1,
+              15
+            ),
           },
         },
+        escrow: {
+          create: { balance: 0, locked: true },
+        },
       },
-      include: { members: memberInclude },
+      include: { members: memberInclude, escrow: true },
     });
 
-    // Log activity
     await prisma.activity.create({
       data: {
         userId,
@@ -194,7 +286,6 @@ router.post("/:id/invite", async (req, res) => {
     const circle = await prisma.circle.findUnique({ where: { id: circleId } });
     if (!circle) return res.status(404).json({ error: "Circle not found" });
 
-    // Check sender is a member
     const senderMember = await prisma.circleMember.findUnique({
       where: { userId_circleId: { userId, circleId } },
     });
@@ -203,7 +294,7 @@ router.post("/:id/invite", async (req, res) => {
     }
 
     const expiresAt = new Date();
-    expiresAt.setDate(expiresAt.getDate() + 7); // 7-day invite
+    expiresAt.setDate(expiresAt.getDate() + 7);
 
     const invite = await prisma.invite.create({
       data: {
@@ -216,7 +307,7 @@ router.post("/:id/invite", async (req, res) => {
 
     return res.status(201).json({
       inviteToken: invite.token,
-      inviteUrl: `http://localhost:5173/invite/${invite.token}`,
+      inviteUrl: `${process.env.FRONTEND_URL || "http://localhost:5173"}/invite/${invite.token}`,
       email: invite.email,
       expiresAt: invite.expiresAt,
     });
@@ -227,6 +318,9 @@ router.post("/:id/invite", async (req, res) => {
 });
 
 // ─── POST /api/circles/:id/payout ────────────────────────────────────────────
+// Only the circle leader can trigger this.
+// For digital funds: sends an actual Paystack transfer to the recipient's bank.
+// For cash circles (escrow balance = 0): logs the payout and marks it complete.
 
 router.post("/:id/payout", async (req, res) => {
   const { id } = req.params;
@@ -235,51 +329,148 @@ router.post("/:id/payout", async (req, res) => {
   try {
     const circle = await prisma.circle.findUnique({
       where: { id },
-      include: { members: { orderBy: { position: "asc" }, ...memberInclude } },
+      include: {
+        members: {
+          orderBy: { position: "asc" },
+          ...memberInclude,
+          include: {
+            user: {
+              select: {
+                id: true,
+                name: true,
+                avatar: true,
+                trustScore: true,
+                bankAccount: true,
+                paystackRecipientCode: true,
+              },
+            },
+          },
+        },
+        escrow: true,
+      },
     });
 
     if (!circle) return res.status(404).json({ error: "Circle not found" });
 
-    // Find the active (next unpaid) member
+    // Only the leader can trigger payout
+    if (circle.leaderId !== userId) {
+      return res.status(403).json({ error: "Only the circle leader can trigger payouts." });
+    }
+
     const activeSlot = circle.members.find((m) => !m.payoutReceived);
     if (!activeSlot) {
       return res.status(400).json({ error: "All payouts have already been completed." });
     }
 
-    // Mark them as paid
+    const payoutAmount = circle.monthlyContribution * circle.members.length;
+    const recipient = activeSlot.user;
+
+    let transferRef = null;
+
+    // If there are digital funds in escrow, send a Paystack transfer
+    if (circle.escrow && circle.escrow.balance > 0) {
+      if (!recipient.bankAccount) {
+        return res.status(400).json({
+          error: `${recipient.name} has not added their bank account yet. Ask them to update their profile before triggering payout.`,
+        });
+      }
+
+      const bankAccount = JSON.parse(recipient.bankAccount);
+      let recipientCode = recipient.paystackRecipientCode;
+
+      // Create Paystack recipient if not already stored
+      if (!recipientCode) {
+        try {
+          const paystackRecipient = await createTransferRecipient({
+            name: bankAccount.accountName,
+            accountNumber: bankAccount.accountNumber,
+            bankCode: bankAccount.bankCode,
+          });
+          recipientCode = paystackRecipient.recipient_code;
+
+          await prisma.user.update({
+            where: { id: recipient.id },
+            data: { paystackRecipientCode: recipientCode },
+          });
+        } catch (err) {
+          console.error("Failed to create Paystack recipient:", err.message);
+          return res.status(502).json({
+            error: "Could not register recipient with Paystack. Check bank account details.",
+          });
+        }
+      }
+
+      // Initiate transfer
+      try {
+        transferRef = `herjo-payout-${randomUUID()}`;
+        await initiateTransfer({
+          amountNaira: payoutAmount,
+          recipientCode,
+          reason: `HerJo payout — ${circle.name} cycle ${circle.currentCycle}`,
+          reference: transferRef,
+        });
+      } catch (err) {
+        console.error("Paystack transfer failed:", err.message);
+        return res.status(502).json({
+          error: "Transfer failed. Please try again or contact support.",
+        });
+      }
+
+      // Deduct from escrow
+      await prisma.escrow.update({
+        where: { circleId: id },
+        data: { balance: { decrement: payoutAmount } },
+      });
+    }
+
+    // Mark slot as paid
     await prisma.circleMember.update({
       where: { id: activeSlot.id },
       data: { payoutReceived: true, payoutReceivedAt: new Date() },
     });
 
-    // Log payout activity
-    const amount = circle.monthlyContribution * circle.members.length;
+    // Give cycle completion trust score bonus to recipient
+    const newTrustScore = await applyCycleCompletionBonus(activeSlot.userId);
+
+    // Log activity
     await prisma.activity.create({
       data: {
         userId: activeSlot.userId,
         circleId: circle.id,
-        action: "Payout completed",
-        amount,
-        metadata: JSON.stringify({ recipient: activeSlot.user.name }),
+        action: transferRef ? "Payout initiated" : "Payout completed",
+        amount: payoutAmount,
+        metadata: JSON.stringify({
+          recipient: recipient.name,
+          circleName: circle.name,
+          transferRef,
+          manual: !transferRef,
+        }),
       },
     });
 
     // Check if circle is fully complete
-    const remainingSlots = circle.members.filter(
+    const remaining = circle.members.filter(
       (m) => !m.payoutReceived && m.id !== activeSlot.id
     );
-    if (remainingSlots.length === 0) {
+    if (remaining.length === 0) {
       await prisma.circle.update({ where: { id }, data: { status: "completed" } });
     }
 
-    // Re-fetch updated circle
     const updatedCircle = await prisma.circle.findUnique({
       where: { id },
-      include: { members: { orderBy: { position: "asc" }, ...memberInclude } },
+      include: { members: memberInclude, escrow: true },
     });
 
     return res.json({
-      message: `Payout completed for ${activeSlot.user.name}`,
+      message: transferRef
+        ? `₦${payoutAmount.toLocaleString()} transfer initiated to ${recipient.name}.`
+        : `Payout of ₦${payoutAmount.toLocaleString()} recorded for ${recipient.name}.`,
+      transferRef,
+      recipient: {
+        id: recipient.id,
+        name: recipient.name,
+        newTrustScore,
+      },
       circle: formatCircle(updatedCircle, userId, updatedCircle.members),
     });
   } catch (err) {

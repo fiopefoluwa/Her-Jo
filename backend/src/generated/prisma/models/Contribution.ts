@@ -40,6 +40,12 @@ export type ContributionMinAggregateOutputType = {
   circleId: string | null
   amount: number | null
   note: string | null
+  paymentType: string | null
+  status: string | null
+  paystackRef: string | null
+  dueDate: Date | null
+  verifiedAt: Date | null
+  verifiedById: string | null
   createdAt: Date | null
 }
 
@@ -49,6 +55,12 @@ export type ContributionMaxAggregateOutputType = {
   circleId: string | null
   amount: number | null
   note: string | null
+  paymentType: string | null
+  status: string | null
+  paystackRef: string | null
+  dueDate: Date | null
+  verifiedAt: Date | null
+  verifiedById: string | null
   createdAt: Date | null
 }
 
@@ -58,6 +70,12 @@ export type ContributionCountAggregateOutputType = {
   circleId: number
   amount: number
   note: number
+  paymentType: number
+  status: number
+  paystackRef: number
+  dueDate: number
+  verifiedAt: number
+  verifiedById: number
   createdAt: number
   _all: number
 }
@@ -77,6 +95,12 @@ export type ContributionMinAggregateInputType = {
   circleId?: true
   amount?: true
   note?: true
+  paymentType?: true
+  status?: true
+  paystackRef?: true
+  dueDate?: true
+  verifiedAt?: true
+  verifiedById?: true
   createdAt?: true
 }
 
@@ -86,6 +110,12 @@ export type ContributionMaxAggregateInputType = {
   circleId?: true
   amount?: true
   note?: true
+  paymentType?: true
+  status?: true
+  paystackRef?: true
+  dueDate?: true
+  verifiedAt?: true
+  verifiedById?: true
   createdAt?: true
 }
 
@@ -95,6 +125,12 @@ export type ContributionCountAggregateInputType = {
   circleId?: true
   amount?: true
   note?: true
+  paymentType?: true
+  status?: true
+  paystackRef?: true
+  dueDate?: true
+  verifiedAt?: true
+  verifiedById?: true
   createdAt?: true
   _all?: true
 }
@@ -191,6 +227,12 @@ export type ContributionGroupByOutputType = {
   circleId: string
   amount: number
   note: string
+  paymentType: string
+  status: string
+  paystackRef: string | null
+  dueDate: Date | null
+  verifiedAt: Date | null
+  verifiedById: string | null
   createdAt: Date
   _count: ContributionCountAggregateOutputType | null
   _avg: ContributionAvgAggregateOutputType | null
@@ -223,9 +265,16 @@ export type ContributionWhereInput = {
   circleId?: Prisma.StringFilter<"Contribution"> | string
   amount?: Prisma.FloatFilter<"Contribution"> | number
   note?: Prisma.StringFilter<"Contribution"> | string
+  paymentType?: Prisma.StringFilter<"Contribution"> | string
+  status?: Prisma.StringFilter<"Contribution"> | string
+  paystackRef?: Prisma.StringNullableFilter<"Contribution"> | string | null
+  dueDate?: Prisma.DateTimeNullableFilter<"Contribution"> | Date | string | null
+  verifiedAt?: Prisma.DateTimeNullableFilter<"Contribution"> | Date | string | null
+  verifiedById?: Prisma.StringNullableFilter<"Contribution"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Contribution"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   circle?: Prisma.XOR<Prisma.CircleScalarRelationFilter, Prisma.CircleWhereInput>
+  verifiedBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
 }
 
 export type ContributionOrderByWithRelationInput = {
@@ -234,9 +283,16 @@ export type ContributionOrderByWithRelationInput = {
   circleId?: Prisma.SortOrder
   amount?: Prisma.SortOrder
   note?: Prisma.SortOrder
+  paymentType?: Prisma.SortOrder
+  status?: Prisma.SortOrder
+  paystackRef?: Prisma.SortOrderInput | Prisma.SortOrder
+  dueDate?: Prisma.SortOrderInput | Prisma.SortOrder
+  verifiedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  verifiedById?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
   circle?: Prisma.CircleOrderByWithRelationInput
+  verifiedBy?: Prisma.UserOrderByWithRelationInput
 }
 
 export type ContributionWhereUniqueInput = Prisma.AtLeast<{
@@ -248,9 +304,16 @@ export type ContributionWhereUniqueInput = Prisma.AtLeast<{
   circleId?: Prisma.StringFilter<"Contribution"> | string
   amount?: Prisma.FloatFilter<"Contribution"> | number
   note?: Prisma.StringFilter<"Contribution"> | string
+  paymentType?: Prisma.StringFilter<"Contribution"> | string
+  status?: Prisma.StringFilter<"Contribution"> | string
+  paystackRef?: Prisma.StringNullableFilter<"Contribution"> | string | null
+  dueDate?: Prisma.DateTimeNullableFilter<"Contribution"> | Date | string | null
+  verifiedAt?: Prisma.DateTimeNullableFilter<"Contribution"> | Date | string | null
+  verifiedById?: Prisma.StringNullableFilter<"Contribution"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Contribution"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   circle?: Prisma.XOR<Prisma.CircleScalarRelationFilter, Prisma.CircleWhereInput>
+  verifiedBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
 }, "id">
 
 export type ContributionOrderByWithAggregationInput = {
@@ -259,6 +322,12 @@ export type ContributionOrderByWithAggregationInput = {
   circleId?: Prisma.SortOrder
   amount?: Prisma.SortOrder
   note?: Prisma.SortOrder
+  paymentType?: Prisma.SortOrder
+  status?: Prisma.SortOrder
+  paystackRef?: Prisma.SortOrderInput | Prisma.SortOrder
+  dueDate?: Prisma.SortOrderInput | Prisma.SortOrder
+  verifiedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  verifiedById?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   _count?: Prisma.ContributionCountOrderByAggregateInput
   _avg?: Prisma.ContributionAvgOrderByAggregateInput
@@ -276,6 +345,12 @@ export type ContributionScalarWhereWithAggregatesInput = {
   circleId?: Prisma.StringWithAggregatesFilter<"Contribution"> | string
   amount?: Prisma.FloatWithAggregatesFilter<"Contribution"> | number
   note?: Prisma.StringWithAggregatesFilter<"Contribution"> | string
+  paymentType?: Prisma.StringWithAggregatesFilter<"Contribution"> | string
+  status?: Prisma.StringWithAggregatesFilter<"Contribution"> | string
+  paystackRef?: Prisma.StringNullableWithAggregatesFilter<"Contribution"> | string | null
+  dueDate?: Prisma.DateTimeNullableWithAggregatesFilter<"Contribution"> | Date | string | null
+  verifiedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Contribution"> | Date | string | null
+  verifiedById?: Prisma.StringNullableWithAggregatesFilter<"Contribution"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Contribution"> | Date | string
 }
 
@@ -283,9 +358,15 @@ export type ContributionCreateInput = {
   id?: string
   amount: number
   note?: string
+  paymentType?: string
+  status?: string
+  paystackRef?: string | null
+  dueDate?: Date | string | null
+  verifiedAt?: Date | string | null
   createdAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutContributionsInput
   circle: Prisma.CircleCreateNestedOneWithoutContributionsInput
+  verifiedBy?: Prisma.UserCreateNestedOneWithoutVerifiedContribsInput
 }
 
 export type ContributionUncheckedCreateInput = {
@@ -294,6 +375,12 @@ export type ContributionUncheckedCreateInput = {
   circleId: string
   amount: number
   note?: string
+  paymentType?: string
+  status?: string
+  paystackRef?: string | null
+  dueDate?: Date | string | null
+  verifiedAt?: Date | string | null
+  verifiedById?: string | null
   createdAt?: Date | string
 }
 
@@ -301,9 +388,15 @@ export type ContributionUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.FloatFieldUpdateOperationsInput | number
   note?: Prisma.StringFieldUpdateOperationsInput | string
+  paymentType?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  paystackRef?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutContributionsNestedInput
   circle?: Prisma.CircleUpdateOneRequiredWithoutContributionsNestedInput
+  verifiedBy?: Prisma.UserUpdateOneWithoutVerifiedContribsNestedInput
 }
 
 export type ContributionUncheckedUpdateInput = {
@@ -312,6 +405,12 @@ export type ContributionUncheckedUpdateInput = {
   circleId?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.FloatFieldUpdateOperationsInput | number
   note?: Prisma.StringFieldUpdateOperationsInput | string
+  paymentType?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  paystackRef?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -321,6 +420,12 @@ export type ContributionCreateManyInput = {
   circleId: string
   amount: number
   note?: string
+  paymentType?: string
+  status?: string
+  paystackRef?: string | null
+  dueDate?: Date | string | null
+  verifiedAt?: Date | string | null
+  verifiedById?: string | null
   createdAt?: Date | string
 }
 
@@ -328,6 +433,11 @@ export type ContributionUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.FloatFieldUpdateOperationsInput | number
   note?: Prisma.StringFieldUpdateOperationsInput | string
+  paymentType?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  paystackRef?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -337,6 +447,12 @@ export type ContributionUncheckedUpdateManyInput = {
   circleId?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.FloatFieldUpdateOperationsInput | number
   note?: Prisma.StringFieldUpdateOperationsInput | string
+  paymentType?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  paystackRef?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -356,6 +472,12 @@ export type ContributionCountOrderByAggregateInput = {
   circleId?: Prisma.SortOrder
   amount?: Prisma.SortOrder
   note?: Prisma.SortOrder
+  paymentType?: Prisma.SortOrder
+  status?: Prisma.SortOrder
+  paystackRef?: Prisma.SortOrder
+  dueDate?: Prisma.SortOrder
+  verifiedAt?: Prisma.SortOrder
+  verifiedById?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -369,6 +491,12 @@ export type ContributionMaxOrderByAggregateInput = {
   circleId?: Prisma.SortOrder
   amount?: Prisma.SortOrder
   note?: Prisma.SortOrder
+  paymentType?: Prisma.SortOrder
+  status?: Prisma.SortOrder
+  paystackRef?: Prisma.SortOrder
+  dueDate?: Prisma.SortOrder
+  verifiedAt?: Prisma.SortOrder
+  verifiedById?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -378,6 +506,12 @@ export type ContributionMinOrderByAggregateInput = {
   circleId?: Prisma.SortOrder
   amount?: Prisma.SortOrder
   note?: Prisma.SortOrder
+  paymentType?: Prisma.SortOrder
+  status?: Prisma.SortOrder
+  paystackRef?: Prisma.SortOrder
+  dueDate?: Prisma.SortOrder
+  verifiedAt?: Prisma.SortOrder
+  verifiedById?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -392,10 +526,24 @@ export type ContributionCreateNestedManyWithoutUserInput = {
   connect?: Prisma.ContributionWhereUniqueInput | Prisma.ContributionWhereUniqueInput[]
 }
 
+export type ContributionCreateNestedManyWithoutVerifiedByInput = {
+  create?: Prisma.XOR<Prisma.ContributionCreateWithoutVerifiedByInput, Prisma.ContributionUncheckedCreateWithoutVerifiedByInput> | Prisma.ContributionCreateWithoutVerifiedByInput[] | Prisma.ContributionUncheckedCreateWithoutVerifiedByInput[]
+  connectOrCreate?: Prisma.ContributionCreateOrConnectWithoutVerifiedByInput | Prisma.ContributionCreateOrConnectWithoutVerifiedByInput[]
+  createMany?: Prisma.ContributionCreateManyVerifiedByInputEnvelope
+  connect?: Prisma.ContributionWhereUniqueInput | Prisma.ContributionWhereUniqueInput[]
+}
+
 export type ContributionUncheckedCreateNestedManyWithoutUserInput = {
   create?: Prisma.XOR<Prisma.ContributionCreateWithoutUserInput, Prisma.ContributionUncheckedCreateWithoutUserInput> | Prisma.ContributionCreateWithoutUserInput[] | Prisma.ContributionUncheckedCreateWithoutUserInput[]
   connectOrCreate?: Prisma.ContributionCreateOrConnectWithoutUserInput | Prisma.ContributionCreateOrConnectWithoutUserInput[]
   createMany?: Prisma.ContributionCreateManyUserInputEnvelope
+  connect?: Prisma.ContributionWhereUniqueInput | Prisma.ContributionWhereUniqueInput[]
+}
+
+export type ContributionUncheckedCreateNestedManyWithoutVerifiedByInput = {
+  create?: Prisma.XOR<Prisma.ContributionCreateWithoutVerifiedByInput, Prisma.ContributionUncheckedCreateWithoutVerifiedByInput> | Prisma.ContributionCreateWithoutVerifiedByInput[] | Prisma.ContributionUncheckedCreateWithoutVerifiedByInput[]
+  connectOrCreate?: Prisma.ContributionCreateOrConnectWithoutVerifiedByInput | Prisma.ContributionCreateOrConnectWithoutVerifiedByInput[]
+  createMany?: Prisma.ContributionCreateManyVerifiedByInputEnvelope
   connect?: Prisma.ContributionWhereUniqueInput | Prisma.ContributionWhereUniqueInput[]
 }
 
@@ -413,6 +561,20 @@ export type ContributionUpdateManyWithoutUserNestedInput = {
   deleteMany?: Prisma.ContributionScalarWhereInput | Prisma.ContributionScalarWhereInput[]
 }
 
+export type ContributionUpdateManyWithoutVerifiedByNestedInput = {
+  create?: Prisma.XOR<Prisma.ContributionCreateWithoutVerifiedByInput, Prisma.ContributionUncheckedCreateWithoutVerifiedByInput> | Prisma.ContributionCreateWithoutVerifiedByInput[] | Prisma.ContributionUncheckedCreateWithoutVerifiedByInput[]
+  connectOrCreate?: Prisma.ContributionCreateOrConnectWithoutVerifiedByInput | Prisma.ContributionCreateOrConnectWithoutVerifiedByInput[]
+  upsert?: Prisma.ContributionUpsertWithWhereUniqueWithoutVerifiedByInput | Prisma.ContributionUpsertWithWhereUniqueWithoutVerifiedByInput[]
+  createMany?: Prisma.ContributionCreateManyVerifiedByInputEnvelope
+  set?: Prisma.ContributionWhereUniqueInput | Prisma.ContributionWhereUniqueInput[]
+  disconnect?: Prisma.ContributionWhereUniqueInput | Prisma.ContributionWhereUniqueInput[]
+  delete?: Prisma.ContributionWhereUniqueInput | Prisma.ContributionWhereUniqueInput[]
+  connect?: Prisma.ContributionWhereUniqueInput | Prisma.ContributionWhereUniqueInput[]
+  update?: Prisma.ContributionUpdateWithWhereUniqueWithoutVerifiedByInput | Prisma.ContributionUpdateWithWhereUniqueWithoutVerifiedByInput[]
+  updateMany?: Prisma.ContributionUpdateManyWithWhereWithoutVerifiedByInput | Prisma.ContributionUpdateManyWithWhereWithoutVerifiedByInput[]
+  deleteMany?: Prisma.ContributionScalarWhereInput | Prisma.ContributionScalarWhereInput[]
+}
+
 export type ContributionUncheckedUpdateManyWithoutUserNestedInput = {
   create?: Prisma.XOR<Prisma.ContributionCreateWithoutUserInput, Prisma.ContributionUncheckedCreateWithoutUserInput> | Prisma.ContributionCreateWithoutUserInput[] | Prisma.ContributionUncheckedCreateWithoutUserInput[]
   connectOrCreate?: Prisma.ContributionCreateOrConnectWithoutUserInput | Prisma.ContributionCreateOrConnectWithoutUserInput[]
@@ -424,6 +586,20 @@ export type ContributionUncheckedUpdateManyWithoutUserNestedInput = {
   connect?: Prisma.ContributionWhereUniqueInput | Prisma.ContributionWhereUniqueInput[]
   update?: Prisma.ContributionUpdateWithWhereUniqueWithoutUserInput | Prisma.ContributionUpdateWithWhereUniqueWithoutUserInput[]
   updateMany?: Prisma.ContributionUpdateManyWithWhereWithoutUserInput | Prisma.ContributionUpdateManyWithWhereWithoutUserInput[]
+  deleteMany?: Prisma.ContributionScalarWhereInput | Prisma.ContributionScalarWhereInput[]
+}
+
+export type ContributionUncheckedUpdateManyWithoutVerifiedByNestedInput = {
+  create?: Prisma.XOR<Prisma.ContributionCreateWithoutVerifiedByInput, Prisma.ContributionUncheckedCreateWithoutVerifiedByInput> | Prisma.ContributionCreateWithoutVerifiedByInput[] | Prisma.ContributionUncheckedCreateWithoutVerifiedByInput[]
+  connectOrCreate?: Prisma.ContributionCreateOrConnectWithoutVerifiedByInput | Prisma.ContributionCreateOrConnectWithoutVerifiedByInput[]
+  upsert?: Prisma.ContributionUpsertWithWhereUniqueWithoutVerifiedByInput | Prisma.ContributionUpsertWithWhereUniqueWithoutVerifiedByInput[]
+  createMany?: Prisma.ContributionCreateManyVerifiedByInputEnvelope
+  set?: Prisma.ContributionWhereUniqueInput | Prisma.ContributionWhereUniqueInput[]
+  disconnect?: Prisma.ContributionWhereUniqueInput | Prisma.ContributionWhereUniqueInput[]
+  delete?: Prisma.ContributionWhereUniqueInput | Prisma.ContributionWhereUniqueInput[]
+  connect?: Prisma.ContributionWhereUniqueInput | Prisma.ContributionWhereUniqueInput[]
+  update?: Prisma.ContributionUpdateWithWhereUniqueWithoutVerifiedByInput | Prisma.ContributionUpdateWithWhereUniqueWithoutVerifiedByInput[]
+  updateMany?: Prisma.ContributionUpdateManyWithWhereWithoutVerifiedByInput | Prisma.ContributionUpdateManyWithWhereWithoutVerifiedByInput[]
   deleteMany?: Prisma.ContributionScalarWhereInput | Prisma.ContributionScalarWhereInput[]
 }
 
@@ -473,8 +649,14 @@ export type ContributionCreateWithoutUserInput = {
   id?: string
   amount: number
   note?: string
+  paymentType?: string
+  status?: string
+  paystackRef?: string | null
+  dueDate?: Date | string | null
+  verifiedAt?: Date | string | null
   createdAt?: Date | string
   circle: Prisma.CircleCreateNestedOneWithoutContributionsInput
+  verifiedBy?: Prisma.UserCreateNestedOneWithoutVerifiedContribsInput
 }
 
 export type ContributionUncheckedCreateWithoutUserInput = {
@@ -482,6 +664,12 @@ export type ContributionUncheckedCreateWithoutUserInput = {
   circleId: string
   amount: number
   note?: string
+  paymentType?: string
+  status?: string
+  paystackRef?: string | null
+  dueDate?: Date | string | null
+  verifiedAt?: Date | string | null
+  verifiedById?: string | null
   createdAt?: Date | string
 }
 
@@ -492,6 +680,43 @@ export type ContributionCreateOrConnectWithoutUserInput = {
 
 export type ContributionCreateManyUserInputEnvelope = {
   data: Prisma.ContributionCreateManyUserInput | Prisma.ContributionCreateManyUserInput[]
+}
+
+export type ContributionCreateWithoutVerifiedByInput = {
+  id?: string
+  amount: number
+  note?: string
+  paymentType?: string
+  status?: string
+  paystackRef?: string | null
+  dueDate?: Date | string | null
+  verifiedAt?: Date | string | null
+  createdAt?: Date | string
+  user: Prisma.UserCreateNestedOneWithoutContributionsInput
+  circle: Prisma.CircleCreateNestedOneWithoutContributionsInput
+}
+
+export type ContributionUncheckedCreateWithoutVerifiedByInput = {
+  id?: string
+  userId: string
+  circleId: string
+  amount: number
+  note?: string
+  paymentType?: string
+  status?: string
+  paystackRef?: string | null
+  dueDate?: Date | string | null
+  verifiedAt?: Date | string | null
+  createdAt?: Date | string
+}
+
+export type ContributionCreateOrConnectWithoutVerifiedByInput = {
+  where: Prisma.ContributionWhereUniqueInput
+  create: Prisma.XOR<Prisma.ContributionCreateWithoutVerifiedByInput, Prisma.ContributionUncheckedCreateWithoutVerifiedByInput>
+}
+
+export type ContributionCreateManyVerifiedByInputEnvelope = {
+  data: Prisma.ContributionCreateManyVerifiedByInput | Prisma.ContributionCreateManyVerifiedByInput[]
 }
 
 export type ContributionUpsertWithWhereUniqueWithoutUserInput = {
@@ -519,15 +744,43 @@ export type ContributionScalarWhereInput = {
   circleId?: Prisma.StringFilter<"Contribution"> | string
   amount?: Prisma.FloatFilter<"Contribution"> | number
   note?: Prisma.StringFilter<"Contribution"> | string
+  paymentType?: Prisma.StringFilter<"Contribution"> | string
+  status?: Prisma.StringFilter<"Contribution"> | string
+  paystackRef?: Prisma.StringNullableFilter<"Contribution"> | string | null
+  dueDate?: Prisma.DateTimeNullableFilter<"Contribution"> | Date | string | null
+  verifiedAt?: Prisma.DateTimeNullableFilter<"Contribution"> | Date | string | null
+  verifiedById?: Prisma.StringNullableFilter<"Contribution"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Contribution"> | Date | string
+}
+
+export type ContributionUpsertWithWhereUniqueWithoutVerifiedByInput = {
+  where: Prisma.ContributionWhereUniqueInput
+  update: Prisma.XOR<Prisma.ContributionUpdateWithoutVerifiedByInput, Prisma.ContributionUncheckedUpdateWithoutVerifiedByInput>
+  create: Prisma.XOR<Prisma.ContributionCreateWithoutVerifiedByInput, Prisma.ContributionUncheckedCreateWithoutVerifiedByInput>
+}
+
+export type ContributionUpdateWithWhereUniqueWithoutVerifiedByInput = {
+  where: Prisma.ContributionWhereUniqueInput
+  data: Prisma.XOR<Prisma.ContributionUpdateWithoutVerifiedByInput, Prisma.ContributionUncheckedUpdateWithoutVerifiedByInput>
+}
+
+export type ContributionUpdateManyWithWhereWithoutVerifiedByInput = {
+  where: Prisma.ContributionScalarWhereInput
+  data: Prisma.XOR<Prisma.ContributionUpdateManyMutationInput, Prisma.ContributionUncheckedUpdateManyWithoutVerifiedByInput>
 }
 
 export type ContributionCreateWithoutCircleInput = {
   id?: string
   amount: number
   note?: string
+  paymentType?: string
+  status?: string
+  paystackRef?: string | null
+  dueDate?: Date | string | null
+  verifiedAt?: Date | string | null
   createdAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutContributionsInput
+  verifiedBy?: Prisma.UserCreateNestedOneWithoutVerifiedContribsInput
 }
 
 export type ContributionUncheckedCreateWithoutCircleInput = {
@@ -535,6 +788,12 @@ export type ContributionUncheckedCreateWithoutCircleInput = {
   userId: string
   amount: number
   note?: string
+  paymentType?: string
+  status?: string
+  paystackRef?: string | null
+  dueDate?: Date | string | null
+  verifiedAt?: Date | string | null
+  verifiedById?: string | null
   createdAt?: Date | string
 }
 
@@ -568,6 +827,26 @@ export type ContributionCreateManyUserInput = {
   circleId: string
   amount: number
   note?: string
+  paymentType?: string
+  status?: string
+  paystackRef?: string | null
+  dueDate?: Date | string | null
+  verifiedAt?: Date | string | null
+  verifiedById?: string | null
+  createdAt?: Date | string
+}
+
+export type ContributionCreateManyVerifiedByInput = {
+  id?: string
+  userId: string
+  circleId: string
+  amount: number
+  note?: string
+  paymentType?: string
+  status?: string
+  paystackRef?: string | null
+  dueDate?: Date | string | null
+  verifiedAt?: Date | string | null
   createdAt?: Date | string
 }
 
@@ -575,8 +854,14 @@ export type ContributionUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.FloatFieldUpdateOperationsInput | number
   note?: Prisma.StringFieldUpdateOperationsInput | string
+  paymentType?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  paystackRef?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   circle?: Prisma.CircleUpdateOneRequiredWithoutContributionsNestedInput
+  verifiedBy?: Prisma.UserUpdateOneWithoutVerifiedContribsNestedInput
 }
 
 export type ContributionUncheckedUpdateWithoutUserInput = {
@@ -584,6 +869,12 @@ export type ContributionUncheckedUpdateWithoutUserInput = {
   circleId?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.FloatFieldUpdateOperationsInput | number
   note?: Prisma.StringFieldUpdateOperationsInput | string
+  paymentType?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  paystackRef?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -592,6 +883,54 @@ export type ContributionUncheckedUpdateManyWithoutUserInput = {
   circleId?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.FloatFieldUpdateOperationsInput | number
   note?: Prisma.StringFieldUpdateOperationsInput | string
+  paymentType?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  paystackRef?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type ContributionUpdateWithoutVerifiedByInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  amount?: Prisma.FloatFieldUpdateOperationsInput | number
+  note?: Prisma.StringFieldUpdateOperationsInput | string
+  paymentType?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  paystackRef?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneRequiredWithoutContributionsNestedInput
+  circle?: Prisma.CircleUpdateOneRequiredWithoutContributionsNestedInput
+}
+
+export type ContributionUncheckedUpdateWithoutVerifiedByInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  circleId?: Prisma.StringFieldUpdateOperationsInput | string
+  amount?: Prisma.FloatFieldUpdateOperationsInput | number
+  note?: Prisma.StringFieldUpdateOperationsInput | string
+  paymentType?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  paystackRef?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type ContributionUncheckedUpdateManyWithoutVerifiedByInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  circleId?: Prisma.StringFieldUpdateOperationsInput | string
+  amount?: Prisma.FloatFieldUpdateOperationsInput | number
+  note?: Prisma.StringFieldUpdateOperationsInput | string
+  paymentType?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  paystackRef?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -600,6 +939,12 @@ export type ContributionCreateManyCircleInput = {
   userId: string
   amount: number
   note?: string
+  paymentType?: string
+  status?: string
+  paystackRef?: string | null
+  dueDate?: Date | string | null
+  verifiedAt?: Date | string | null
+  verifiedById?: string | null
   createdAt?: Date | string
 }
 
@@ -607,8 +952,14 @@ export type ContributionUpdateWithoutCircleInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.FloatFieldUpdateOperationsInput | number
   note?: Prisma.StringFieldUpdateOperationsInput | string
+  paymentType?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  paystackRef?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutContributionsNestedInput
+  verifiedBy?: Prisma.UserUpdateOneWithoutVerifiedContribsNestedInput
 }
 
 export type ContributionUncheckedUpdateWithoutCircleInput = {
@@ -616,6 +967,12 @@ export type ContributionUncheckedUpdateWithoutCircleInput = {
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.FloatFieldUpdateOperationsInput | number
   note?: Prisma.StringFieldUpdateOperationsInput | string
+  paymentType?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  paystackRef?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -624,6 +981,12 @@ export type ContributionUncheckedUpdateManyWithoutCircleInput = {
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.FloatFieldUpdateOperationsInput | number
   note?: Prisma.StringFieldUpdateOperationsInput | string
+  paymentType?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  paystackRef?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dueDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  verifiedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -635,9 +998,16 @@ export type ContributionSelect<ExtArgs extends runtime.Types.Extensions.Internal
   circleId?: boolean
   amount?: boolean
   note?: boolean
+  paymentType?: boolean
+  status?: boolean
+  paystackRef?: boolean
+  dueDate?: boolean
+  verifiedAt?: boolean
+  verifiedById?: boolean
   createdAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   circle?: boolean | Prisma.CircleDefaultArgs<ExtArgs>
+  verifiedBy?: boolean | Prisma.Contribution$verifiedByArgs<ExtArgs>
 }, ExtArgs["result"]["contribution"]>
 
 export type ContributionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -646,9 +1016,16 @@ export type ContributionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.
   circleId?: boolean
   amount?: boolean
   note?: boolean
+  paymentType?: boolean
+  status?: boolean
+  paystackRef?: boolean
+  dueDate?: boolean
+  verifiedAt?: boolean
+  verifiedById?: boolean
   createdAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   circle?: boolean | Prisma.CircleDefaultArgs<ExtArgs>
+  verifiedBy?: boolean | Prisma.Contribution$verifiedByArgs<ExtArgs>
 }, ExtArgs["result"]["contribution"]>
 
 export type ContributionSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -657,9 +1034,16 @@ export type ContributionSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.
   circleId?: boolean
   amount?: boolean
   note?: boolean
+  paymentType?: boolean
+  status?: boolean
+  paystackRef?: boolean
+  dueDate?: boolean
+  verifiedAt?: boolean
+  verifiedById?: boolean
   createdAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   circle?: boolean | Prisma.CircleDefaultArgs<ExtArgs>
+  verifiedBy?: boolean | Prisma.Contribution$verifiedByArgs<ExtArgs>
 }, ExtArgs["result"]["contribution"]>
 
 export type ContributionSelectScalar = {
@@ -668,21 +1052,30 @@ export type ContributionSelectScalar = {
   circleId?: boolean
   amount?: boolean
   note?: boolean
+  paymentType?: boolean
+  status?: boolean
+  paystackRef?: boolean
+  dueDate?: boolean
+  verifiedAt?: boolean
+  verifiedById?: boolean
   createdAt?: boolean
 }
 
-export type ContributionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "circleId" | "amount" | "note" | "createdAt", ExtArgs["result"]["contribution"]>
+export type ContributionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "circleId" | "amount" | "note" | "paymentType" | "status" | "paystackRef" | "dueDate" | "verifiedAt" | "verifiedById" | "createdAt", ExtArgs["result"]["contribution"]>
 export type ContributionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   circle?: boolean | Prisma.CircleDefaultArgs<ExtArgs>
+  verifiedBy?: boolean | Prisma.Contribution$verifiedByArgs<ExtArgs>
 }
 export type ContributionIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   circle?: boolean | Prisma.CircleDefaultArgs<ExtArgs>
+  verifiedBy?: boolean | Prisma.Contribution$verifiedByArgs<ExtArgs>
 }
 export type ContributionIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   circle?: boolean | Prisma.CircleDefaultArgs<ExtArgs>
+  verifiedBy?: boolean | Prisma.Contribution$verifiedByArgs<ExtArgs>
 }
 
 export type $ContributionPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -690,6 +1083,7 @@ export type $ContributionPayload<ExtArgs extends runtime.Types.Extensions.Intern
   objects: {
     user: Prisma.$UserPayload<ExtArgs>
     circle: Prisma.$CirclePayload<ExtArgs>
+    verifiedBy: Prisma.$UserPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -697,6 +1091,12 @@ export type $ContributionPayload<ExtArgs extends runtime.Types.Extensions.Intern
     circleId: string
     amount: number
     note: string
+    paymentType: string
+    status: string
+    paystackRef: string | null
+    dueDate: Date | null
+    verifiedAt: Date | null
+    verifiedById: string | null
     createdAt: Date
   }, ExtArgs["result"]["contribution"]>
   composites: {}
@@ -1094,6 +1494,7 @@ export interface Prisma__ContributionClient<T, Null = never, ExtArgs extends run
   readonly [Symbol.toStringTag]: "PrismaPromise"
   user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   circle<T extends Prisma.CircleDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CircleDefaultArgs<ExtArgs>>): Prisma.Prisma__CircleClient<runtime.Types.Result.GetResult<Prisma.$CirclePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  verifiedBy<T extends Prisma.Contribution$verifiedByArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Contribution$verifiedByArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1128,6 +1529,12 @@ export interface ContributionFieldRefs {
   readonly circleId: Prisma.FieldRef<"Contribution", 'String'>
   readonly amount: Prisma.FieldRef<"Contribution", 'Float'>
   readonly note: Prisma.FieldRef<"Contribution", 'String'>
+  readonly paymentType: Prisma.FieldRef<"Contribution", 'String'>
+  readonly status: Prisma.FieldRef<"Contribution", 'String'>
+  readonly paystackRef: Prisma.FieldRef<"Contribution", 'String'>
+  readonly dueDate: Prisma.FieldRef<"Contribution", 'DateTime'>
+  readonly verifiedAt: Prisma.FieldRef<"Contribution", 'DateTime'>
+  readonly verifiedById: Prisma.FieldRef<"Contribution", 'String'>
   readonly createdAt: Prisma.FieldRef<"Contribution", 'DateTime'>
 }
     
@@ -1525,6 +1932,25 @@ export type ContributionDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.
    * Limit how many Contributions to delete.
    */
   limit?: number
+}
+
+/**
+ * Contribution.verifiedBy
+ */
+export type Contribution$verifiedByArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the User
+   */
+  select?: Prisma.UserSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the User
+   */
+  omit?: Prisma.UserOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserInclude<ExtArgs> | null
+  where?: Prisma.UserWhereInput
 }
 
 /**

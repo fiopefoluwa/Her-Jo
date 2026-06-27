@@ -55,6 +55,7 @@ export const ModelName = {
   Circle: 'Circle',
   CircleMember: 'CircleMember',
   Contribution: 'Contribution',
+  Escrow: 'Escrow',
   Activity: 'Activity',
   Invite: 'Invite'
 } as const
@@ -80,6 +81,8 @@ export const UserScalarFieldEnum = {
   passwordHash: 'passwordHash',
   trustScore: 'trustScore',
   avatar: 'avatar',
+  bankAccount: 'bankAccount',
+  paystackRecipientCode: 'paystackRecipientCode',
   joinedDate: 'joinedDate',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -92,7 +95,9 @@ export const CircleScalarFieldEnum = {
   id: 'id',
   name: 'name',
   description: 'description',
+  leaderId: 'leaderId',
   monthlyContribution: 'monthlyContribution',
+  frequency: 'frequency',
   status: 'status',
   currentCycle: 'currentCycle',
   totalCycles: 'totalCycles',
@@ -125,10 +130,28 @@ export const ContributionScalarFieldEnum = {
   circleId: 'circleId',
   amount: 'amount',
   note: 'note',
+  paymentType: 'paymentType',
+  status: 'status',
+  paystackRef: 'paystackRef',
+  dueDate: 'dueDate',
+  verifiedAt: 'verifiedAt',
+  verifiedById: 'verifiedById',
   createdAt: 'createdAt'
 } as const
 
 export type ContributionScalarFieldEnum = (typeof ContributionScalarFieldEnum)[keyof typeof ContributionScalarFieldEnum]
+
+
+export const EscrowScalarFieldEnum = {
+  id: 'id',
+  circleId: 'circleId',
+  balance: 'balance',
+  locked: 'locked',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type EscrowScalarFieldEnum = (typeof EscrowScalarFieldEnum)[keyof typeof EscrowScalarFieldEnum]
 
 
 export const ActivityScalarFieldEnum = {

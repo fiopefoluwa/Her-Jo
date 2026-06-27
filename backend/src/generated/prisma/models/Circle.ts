@@ -42,7 +42,9 @@ export type CircleMinAggregateOutputType = {
   id: string | null
   name: string | null
   description: string | null
+  leaderId: string | null
   monthlyContribution: number | null
+  frequency: string | null
   status: string | null
   currentCycle: number | null
   totalCycles: number | null
@@ -56,7 +58,9 @@ export type CircleMaxAggregateOutputType = {
   id: string | null
   name: string | null
   description: string | null
+  leaderId: string | null
   monthlyContribution: number | null
+  frequency: string | null
   status: string | null
   currentCycle: number | null
   totalCycles: number | null
@@ -70,7 +74,9 @@ export type CircleCountAggregateOutputType = {
   id: number
   name: number
   description: number
+  leaderId: number
   monthlyContribution: number
+  frequency: number
   status: number
   currentCycle: number
   totalCycles: number
@@ -98,7 +104,9 @@ export type CircleMinAggregateInputType = {
   id?: true
   name?: true
   description?: true
+  leaderId?: true
   monthlyContribution?: true
+  frequency?: true
   status?: true
   currentCycle?: true
   totalCycles?: true
@@ -112,7 +120,9 @@ export type CircleMaxAggregateInputType = {
   id?: true
   name?: true
   description?: true
+  leaderId?: true
   monthlyContribution?: true
+  frequency?: true
   status?: true
   currentCycle?: true
   totalCycles?: true
@@ -126,7 +136,9 @@ export type CircleCountAggregateInputType = {
   id?: true
   name?: true
   description?: true
+  leaderId?: true
   monthlyContribution?: true
+  frequency?: true
   status?: true
   currentCycle?: true
   totalCycles?: true
@@ -227,7 +239,9 @@ export type CircleGroupByOutputType = {
   id: string
   name: string
   description: string
+  leaderId: string
   monthlyContribution: number
+  frequency: string
   status: string
   currentCycle: number
   totalCycles: number
@@ -264,7 +278,9 @@ export type CircleWhereInput = {
   id?: Prisma.StringFilter<"Circle"> | string
   name?: Prisma.StringFilter<"Circle"> | string
   description?: Prisma.StringFilter<"Circle"> | string
+  leaderId?: Prisma.StringFilter<"Circle"> | string
   monthlyContribution?: Prisma.FloatFilter<"Circle"> | number
+  frequency?: Prisma.StringFilter<"Circle"> | string
   status?: Prisma.StringFilter<"Circle"> | string
   currentCycle?: Prisma.IntFilter<"Circle"> | number
   totalCycles?: Prisma.IntFilter<"Circle"> | number
@@ -272,17 +288,21 @@ export type CircleWhereInput = {
   endDate?: Prisma.DateTimeFilter<"Circle"> | Date | string
   createdAt?: Prisma.DateTimeFilter<"Circle"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Circle"> | Date | string
+  leader?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   members?: Prisma.CircleMemberListRelationFilter
   contributions?: Prisma.ContributionListRelationFilter
   activities?: Prisma.ActivityListRelationFilter
   invites?: Prisma.InviteListRelationFilter
+  escrow?: Prisma.XOR<Prisma.EscrowNullableScalarRelationFilter, Prisma.EscrowWhereInput> | null
 }
 
 export type CircleOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  leaderId?: Prisma.SortOrder
   monthlyContribution?: Prisma.SortOrder
+  frequency?: Prisma.SortOrder
   status?: Prisma.SortOrder
   currentCycle?: Prisma.SortOrder
   totalCycles?: Prisma.SortOrder
@@ -290,10 +310,12 @@ export type CircleOrderByWithRelationInput = {
   endDate?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  leader?: Prisma.UserOrderByWithRelationInput
   members?: Prisma.CircleMemberOrderByRelationAggregateInput
   contributions?: Prisma.ContributionOrderByRelationAggregateInput
   activities?: Prisma.ActivityOrderByRelationAggregateInput
   invites?: Prisma.InviteOrderByRelationAggregateInput
+  escrow?: Prisma.EscrowOrderByWithRelationInput
 }
 
 export type CircleWhereUniqueInput = Prisma.AtLeast<{
@@ -303,7 +325,9 @@ export type CircleWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.CircleWhereInput | Prisma.CircleWhereInput[]
   name?: Prisma.StringFilter<"Circle"> | string
   description?: Prisma.StringFilter<"Circle"> | string
+  leaderId?: Prisma.StringFilter<"Circle"> | string
   monthlyContribution?: Prisma.FloatFilter<"Circle"> | number
+  frequency?: Prisma.StringFilter<"Circle"> | string
   status?: Prisma.StringFilter<"Circle"> | string
   currentCycle?: Prisma.IntFilter<"Circle"> | number
   totalCycles?: Prisma.IntFilter<"Circle"> | number
@@ -311,17 +335,21 @@ export type CircleWhereUniqueInput = Prisma.AtLeast<{
   endDate?: Prisma.DateTimeFilter<"Circle"> | Date | string
   createdAt?: Prisma.DateTimeFilter<"Circle"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Circle"> | Date | string
+  leader?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   members?: Prisma.CircleMemberListRelationFilter
   contributions?: Prisma.ContributionListRelationFilter
   activities?: Prisma.ActivityListRelationFilter
   invites?: Prisma.InviteListRelationFilter
+  escrow?: Prisma.XOR<Prisma.EscrowNullableScalarRelationFilter, Prisma.EscrowWhereInput> | null
 }, "id">
 
 export type CircleOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  leaderId?: Prisma.SortOrder
   monthlyContribution?: Prisma.SortOrder
+  frequency?: Prisma.SortOrder
   status?: Prisma.SortOrder
   currentCycle?: Prisma.SortOrder
   totalCycles?: Prisma.SortOrder
@@ -343,7 +371,9 @@ export type CircleScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"Circle"> | string
   name?: Prisma.StringWithAggregatesFilter<"Circle"> | string
   description?: Prisma.StringWithAggregatesFilter<"Circle"> | string
+  leaderId?: Prisma.StringWithAggregatesFilter<"Circle"> | string
   monthlyContribution?: Prisma.FloatWithAggregatesFilter<"Circle"> | number
+  frequency?: Prisma.StringWithAggregatesFilter<"Circle"> | string
   status?: Prisma.StringWithAggregatesFilter<"Circle"> | string
   currentCycle?: Prisma.IntWithAggregatesFilter<"Circle"> | number
   totalCycles?: Prisma.IntWithAggregatesFilter<"Circle"> | number
@@ -358,6 +388,7 @@ export type CircleCreateInput = {
   name: string
   description?: string
   monthlyContribution: number
+  frequency?: string
   status?: string
   currentCycle?: number
   totalCycles: number
@@ -365,17 +396,21 @@ export type CircleCreateInput = {
   endDate: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
+  leader: Prisma.UserCreateNestedOneWithoutLedCirclesInput
   members?: Prisma.CircleMemberCreateNestedManyWithoutCircleInput
   contributions?: Prisma.ContributionCreateNestedManyWithoutCircleInput
   activities?: Prisma.ActivityCreateNestedManyWithoutCircleInput
   invites?: Prisma.InviteCreateNestedManyWithoutCircleInput
+  escrow?: Prisma.EscrowCreateNestedOneWithoutCircleInput
 }
 
 export type CircleUncheckedCreateInput = {
   id?: string
   name: string
   description?: string
+  leaderId: string
   monthlyContribution: number
+  frequency?: string
   status?: string
   currentCycle?: number
   totalCycles: number
@@ -387,6 +422,7 @@ export type CircleUncheckedCreateInput = {
   contributions?: Prisma.ContributionUncheckedCreateNestedManyWithoutCircleInput
   activities?: Prisma.ActivityUncheckedCreateNestedManyWithoutCircleInput
   invites?: Prisma.InviteUncheckedCreateNestedManyWithoutCircleInput
+  escrow?: Prisma.EscrowUncheckedCreateNestedOneWithoutCircleInput
 }
 
 export type CircleUpdateInput = {
@@ -394,6 +430,7 @@ export type CircleUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   monthlyContribution?: Prisma.FloatFieldUpdateOperationsInput | number
+  frequency?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   currentCycle?: Prisma.IntFieldUpdateOperationsInput | number
   totalCycles?: Prisma.IntFieldUpdateOperationsInput | number
@@ -401,17 +438,21 @@ export type CircleUpdateInput = {
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  leader?: Prisma.UserUpdateOneRequiredWithoutLedCirclesNestedInput
   members?: Prisma.CircleMemberUpdateManyWithoutCircleNestedInput
   contributions?: Prisma.ContributionUpdateManyWithoutCircleNestedInput
   activities?: Prisma.ActivityUpdateManyWithoutCircleNestedInput
   invites?: Prisma.InviteUpdateManyWithoutCircleNestedInput
+  escrow?: Prisma.EscrowUpdateOneWithoutCircleNestedInput
 }
 
 export type CircleUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  leaderId?: Prisma.StringFieldUpdateOperationsInput | string
   monthlyContribution?: Prisma.FloatFieldUpdateOperationsInput | number
+  frequency?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   currentCycle?: Prisma.IntFieldUpdateOperationsInput | number
   totalCycles?: Prisma.IntFieldUpdateOperationsInput | number
@@ -423,13 +464,16 @@ export type CircleUncheckedUpdateInput = {
   contributions?: Prisma.ContributionUncheckedUpdateManyWithoutCircleNestedInput
   activities?: Prisma.ActivityUncheckedUpdateManyWithoutCircleNestedInput
   invites?: Prisma.InviteUncheckedUpdateManyWithoutCircleNestedInput
+  escrow?: Prisma.EscrowUncheckedUpdateOneWithoutCircleNestedInput
 }
 
 export type CircleCreateManyInput = {
   id?: string
   name: string
   description?: string
+  leaderId: string
   monthlyContribution: number
+  frequency?: string
   status?: string
   currentCycle?: number
   totalCycles: number
@@ -444,6 +488,7 @@ export type CircleUpdateManyMutationInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   monthlyContribution?: Prisma.FloatFieldUpdateOperationsInput | number
+  frequency?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   currentCycle?: Prisma.IntFieldUpdateOperationsInput | number
   totalCycles?: Prisma.IntFieldUpdateOperationsInput | number
@@ -457,7 +502,9 @@ export type CircleUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  leaderId?: Prisma.StringFieldUpdateOperationsInput | string
   monthlyContribution?: Prisma.FloatFieldUpdateOperationsInput | number
+  frequency?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   currentCycle?: Prisma.IntFieldUpdateOperationsInput | number
   totalCycles?: Prisma.IntFieldUpdateOperationsInput | number
@@ -467,11 +514,23 @@ export type CircleUncheckedUpdateManyInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
+export type CircleListRelationFilter = {
+  every?: Prisma.CircleWhereInput
+  some?: Prisma.CircleWhereInput
+  none?: Prisma.CircleWhereInput
+}
+
+export type CircleOrderByRelationAggregateInput = {
+  _count?: Prisma.SortOrder
+}
+
 export type CircleCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  leaderId?: Prisma.SortOrder
   monthlyContribution?: Prisma.SortOrder
+  frequency?: Prisma.SortOrder
   status?: Prisma.SortOrder
   currentCycle?: Prisma.SortOrder
   totalCycles?: Prisma.SortOrder
@@ -491,7 +550,9 @@ export type CircleMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  leaderId?: Prisma.SortOrder
   monthlyContribution?: Prisma.SortOrder
+  frequency?: Prisma.SortOrder
   status?: Prisma.SortOrder
   currentCycle?: Prisma.SortOrder
   totalCycles?: Prisma.SortOrder
@@ -505,7 +566,9 @@ export type CircleMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  leaderId?: Prisma.SortOrder
   monthlyContribution?: Prisma.SortOrder
+  frequency?: Prisma.SortOrder
   status?: Prisma.SortOrder
   currentCycle?: Prisma.SortOrder
   totalCycles?: Prisma.SortOrder
@@ -529,6 +592,48 @@ export type CircleScalarRelationFilter = {
 export type CircleNullableScalarRelationFilter = {
   is?: Prisma.CircleWhereInput | null
   isNot?: Prisma.CircleWhereInput | null
+}
+
+export type CircleCreateNestedManyWithoutLeaderInput = {
+  create?: Prisma.XOR<Prisma.CircleCreateWithoutLeaderInput, Prisma.CircleUncheckedCreateWithoutLeaderInput> | Prisma.CircleCreateWithoutLeaderInput[] | Prisma.CircleUncheckedCreateWithoutLeaderInput[]
+  connectOrCreate?: Prisma.CircleCreateOrConnectWithoutLeaderInput | Prisma.CircleCreateOrConnectWithoutLeaderInput[]
+  createMany?: Prisma.CircleCreateManyLeaderInputEnvelope
+  connect?: Prisma.CircleWhereUniqueInput | Prisma.CircleWhereUniqueInput[]
+}
+
+export type CircleUncheckedCreateNestedManyWithoutLeaderInput = {
+  create?: Prisma.XOR<Prisma.CircleCreateWithoutLeaderInput, Prisma.CircleUncheckedCreateWithoutLeaderInput> | Prisma.CircleCreateWithoutLeaderInput[] | Prisma.CircleUncheckedCreateWithoutLeaderInput[]
+  connectOrCreate?: Prisma.CircleCreateOrConnectWithoutLeaderInput | Prisma.CircleCreateOrConnectWithoutLeaderInput[]
+  createMany?: Prisma.CircleCreateManyLeaderInputEnvelope
+  connect?: Prisma.CircleWhereUniqueInput | Prisma.CircleWhereUniqueInput[]
+}
+
+export type CircleUpdateManyWithoutLeaderNestedInput = {
+  create?: Prisma.XOR<Prisma.CircleCreateWithoutLeaderInput, Prisma.CircleUncheckedCreateWithoutLeaderInput> | Prisma.CircleCreateWithoutLeaderInput[] | Prisma.CircleUncheckedCreateWithoutLeaderInput[]
+  connectOrCreate?: Prisma.CircleCreateOrConnectWithoutLeaderInput | Prisma.CircleCreateOrConnectWithoutLeaderInput[]
+  upsert?: Prisma.CircleUpsertWithWhereUniqueWithoutLeaderInput | Prisma.CircleUpsertWithWhereUniqueWithoutLeaderInput[]
+  createMany?: Prisma.CircleCreateManyLeaderInputEnvelope
+  set?: Prisma.CircleWhereUniqueInput | Prisma.CircleWhereUniqueInput[]
+  disconnect?: Prisma.CircleWhereUniqueInput | Prisma.CircleWhereUniqueInput[]
+  delete?: Prisma.CircleWhereUniqueInput | Prisma.CircleWhereUniqueInput[]
+  connect?: Prisma.CircleWhereUniqueInput | Prisma.CircleWhereUniqueInput[]
+  update?: Prisma.CircleUpdateWithWhereUniqueWithoutLeaderInput | Prisma.CircleUpdateWithWhereUniqueWithoutLeaderInput[]
+  updateMany?: Prisma.CircleUpdateManyWithWhereWithoutLeaderInput | Prisma.CircleUpdateManyWithWhereWithoutLeaderInput[]
+  deleteMany?: Prisma.CircleScalarWhereInput | Prisma.CircleScalarWhereInput[]
+}
+
+export type CircleUncheckedUpdateManyWithoutLeaderNestedInput = {
+  create?: Prisma.XOR<Prisma.CircleCreateWithoutLeaderInput, Prisma.CircleUncheckedCreateWithoutLeaderInput> | Prisma.CircleCreateWithoutLeaderInput[] | Prisma.CircleUncheckedCreateWithoutLeaderInput[]
+  connectOrCreate?: Prisma.CircleCreateOrConnectWithoutLeaderInput | Prisma.CircleCreateOrConnectWithoutLeaderInput[]
+  upsert?: Prisma.CircleUpsertWithWhereUniqueWithoutLeaderInput | Prisma.CircleUpsertWithWhereUniqueWithoutLeaderInput[]
+  createMany?: Prisma.CircleCreateManyLeaderInputEnvelope
+  set?: Prisma.CircleWhereUniqueInput | Prisma.CircleWhereUniqueInput[]
+  disconnect?: Prisma.CircleWhereUniqueInput | Prisma.CircleWhereUniqueInput[]
+  delete?: Prisma.CircleWhereUniqueInput | Prisma.CircleWhereUniqueInput[]
+  connect?: Prisma.CircleWhereUniqueInput | Prisma.CircleWhereUniqueInput[]
+  update?: Prisma.CircleUpdateWithWhereUniqueWithoutLeaderInput | Prisma.CircleUpdateWithWhereUniqueWithoutLeaderInput[]
+  updateMany?: Prisma.CircleUpdateManyWithWhereWithoutLeaderInput | Prisma.CircleUpdateManyWithWhereWithoutLeaderInput[]
+  deleteMany?: Prisma.CircleScalarWhereInput | Prisma.CircleScalarWhereInput[]
 }
 
 export type FloatFieldUpdateOperationsInput = {
@@ -567,6 +672,20 @@ export type CircleUpdateOneRequiredWithoutContributionsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.CircleUpdateToOneWithWhereWithoutContributionsInput, Prisma.CircleUpdateWithoutContributionsInput>, Prisma.CircleUncheckedUpdateWithoutContributionsInput>
 }
 
+export type CircleCreateNestedOneWithoutEscrowInput = {
+  create?: Prisma.XOR<Prisma.CircleCreateWithoutEscrowInput, Prisma.CircleUncheckedCreateWithoutEscrowInput>
+  connectOrCreate?: Prisma.CircleCreateOrConnectWithoutEscrowInput
+  connect?: Prisma.CircleWhereUniqueInput
+}
+
+export type CircleUpdateOneRequiredWithoutEscrowNestedInput = {
+  create?: Prisma.XOR<Prisma.CircleCreateWithoutEscrowInput, Prisma.CircleUncheckedCreateWithoutEscrowInput>
+  connectOrCreate?: Prisma.CircleCreateOrConnectWithoutEscrowInput
+  upsert?: Prisma.CircleUpsertWithoutEscrowInput
+  connect?: Prisma.CircleWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.CircleUpdateToOneWithWhereWithoutEscrowInput, Prisma.CircleUpdateWithoutEscrowInput>, Prisma.CircleUncheckedUpdateWithoutEscrowInput>
+}
+
 export type CircleCreateNestedOneWithoutActivitiesInput = {
   create?: Prisma.XOR<Prisma.CircleCreateWithoutActivitiesInput, Prisma.CircleUncheckedCreateWithoutActivitiesInput>
   connectOrCreate?: Prisma.CircleCreateOrConnectWithoutActivitiesInput
@@ -597,11 +716,12 @@ export type CircleUpdateOneRequiredWithoutInvitesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.CircleUpdateToOneWithWhereWithoutInvitesInput, Prisma.CircleUpdateWithoutInvitesInput>, Prisma.CircleUncheckedUpdateWithoutInvitesInput>
 }
 
-export type CircleCreateWithoutMembersInput = {
+export type CircleCreateWithoutLeaderInput = {
   id?: string
   name: string
   description?: string
   monthlyContribution: number
+  frequency?: string
   status?: string
   currentCycle?: number
   totalCycles: number
@@ -609,16 +729,104 @@ export type CircleCreateWithoutMembersInput = {
   endDate: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
+  members?: Prisma.CircleMemberCreateNestedManyWithoutCircleInput
   contributions?: Prisma.ContributionCreateNestedManyWithoutCircleInput
   activities?: Prisma.ActivityCreateNestedManyWithoutCircleInput
   invites?: Prisma.InviteCreateNestedManyWithoutCircleInput
+  escrow?: Prisma.EscrowCreateNestedOneWithoutCircleInput
+}
+
+export type CircleUncheckedCreateWithoutLeaderInput = {
+  id?: string
+  name: string
+  description?: string
+  monthlyContribution: number
+  frequency?: string
+  status?: string
+  currentCycle?: number
+  totalCycles: number
+  startDate?: Date | string
+  endDate: Date | string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  members?: Prisma.CircleMemberUncheckedCreateNestedManyWithoutCircleInput
+  contributions?: Prisma.ContributionUncheckedCreateNestedManyWithoutCircleInput
+  activities?: Prisma.ActivityUncheckedCreateNestedManyWithoutCircleInput
+  invites?: Prisma.InviteUncheckedCreateNestedManyWithoutCircleInput
+  escrow?: Prisma.EscrowUncheckedCreateNestedOneWithoutCircleInput
+}
+
+export type CircleCreateOrConnectWithoutLeaderInput = {
+  where: Prisma.CircleWhereUniqueInput
+  create: Prisma.XOR<Prisma.CircleCreateWithoutLeaderInput, Prisma.CircleUncheckedCreateWithoutLeaderInput>
+}
+
+export type CircleCreateManyLeaderInputEnvelope = {
+  data: Prisma.CircleCreateManyLeaderInput | Prisma.CircleCreateManyLeaderInput[]
+}
+
+export type CircleUpsertWithWhereUniqueWithoutLeaderInput = {
+  where: Prisma.CircleWhereUniqueInput
+  update: Prisma.XOR<Prisma.CircleUpdateWithoutLeaderInput, Prisma.CircleUncheckedUpdateWithoutLeaderInput>
+  create: Prisma.XOR<Prisma.CircleCreateWithoutLeaderInput, Prisma.CircleUncheckedCreateWithoutLeaderInput>
+}
+
+export type CircleUpdateWithWhereUniqueWithoutLeaderInput = {
+  where: Prisma.CircleWhereUniqueInput
+  data: Prisma.XOR<Prisma.CircleUpdateWithoutLeaderInput, Prisma.CircleUncheckedUpdateWithoutLeaderInput>
+}
+
+export type CircleUpdateManyWithWhereWithoutLeaderInput = {
+  where: Prisma.CircleScalarWhereInput
+  data: Prisma.XOR<Prisma.CircleUpdateManyMutationInput, Prisma.CircleUncheckedUpdateManyWithoutLeaderInput>
+}
+
+export type CircleScalarWhereInput = {
+  AND?: Prisma.CircleScalarWhereInput | Prisma.CircleScalarWhereInput[]
+  OR?: Prisma.CircleScalarWhereInput[]
+  NOT?: Prisma.CircleScalarWhereInput | Prisma.CircleScalarWhereInput[]
+  id?: Prisma.StringFilter<"Circle"> | string
+  name?: Prisma.StringFilter<"Circle"> | string
+  description?: Prisma.StringFilter<"Circle"> | string
+  leaderId?: Prisma.StringFilter<"Circle"> | string
+  monthlyContribution?: Prisma.FloatFilter<"Circle"> | number
+  frequency?: Prisma.StringFilter<"Circle"> | string
+  status?: Prisma.StringFilter<"Circle"> | string
+  currentCycle?: Prisma.IntFilter<"Circle"> | number
+  totalCycles?: Prisma.IntFilter<"Circle"> | number
+  startDate?: Prisma.DateTimeFilter<"Circle"> | Date | string
+  endDate?: Prisma.DateTimeFilter<"Circle"> | Date | string
+  createdAt?: Prisma.DateTimeFilter<"Circle"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Circle"> | Date | string
+}
+
+export type CircleCreateWithoutMembersInput = {
+  id?: string
+  name: string
+  description?: string
+  monthlyContribution: number
+  frequency?: string
+  status?: string
+  currentCycle?: number
+  totalCycles: number
+  startDate?: Date | string
+  endDate: Date | string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  leader: Prisma.UserCreateNestedOneWithoutLedCirclesInput
+  contributions?: Prisma.ContributionCreateNestedManyWithoutCircleInput
+  activities?: Prisma.ActivityCreateNestedManyWithoutCircleInput
+  invites?: Prisma.InviteCreateNestedManyWithoutCircleInput
+  escrow?: Prisma.EscrowCreateNestedOneWithoutCircleInput
 }
 
 export type CircleUncheckedCreateWithoutMembersInput = {
   id?: string
   name: string
   description?: string
+  leaderId: string
   monthlyContribution: number
+  frequency?: string
   status?: string
   currentCycle?: number
   totalCycles: number
@@ -629,6 +837,7 @@ export type CircleUncheckedCreateWithoutMembersInput = {
   contributions?: Prisma.ContributionUncheckedCreateNestedManyWithoutCircleInput
   activities?: Prisma.ActivityUncheckedCreateNestedManyWithoutCircleInput
   invites?: Prisma.InviteUncheckedCreateNestedManyWithoutCircleInput
+  escrow?: Prisma.EscrowUncheckedCreateNestedOneWithoutCircleInput
 }
 
 export type CircleCreateOrConnectWithoutMembersInput = {
@@ -652,6 +861,7 @@ export type CircleUpdateWithoutMembersInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   monthlyContribution?: Prisma.FloatFieldUpdateOperationsInput | number
+  frequency?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   currentCycle?: Prisma.IntFieldUpdateOperationsInput | number
   totalCycles?: Prisma.IntFieldUpdateOperationsInput | number
@@ -659,16 +869,20 @@ export type CircleUpdateWithoutMembersInput = {
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  leader?: Prisma.UserUpdateOneRequiredWithoutLedCirclesNestedInput
   contributions?: Prisma.ContributionUpdateManyWithoutCircleNestedInput
   activities?: Prisma.ActivityUpdateManyWithoutCircleNestedInput
   invites?: Prisma.InviteUpdateManyWithoutCircleNestedInput
+  escrow?: Prisma.EscrowUpdateOneWithoutCircleNestedInput
 }
 
 export type CircleUncheckedUpdateWithoutMembersInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  leaderId?: Prisma.StringFieldUpdateOperationsInput | string
   monthlyContribution?: Prisma.FloatFieldUpdateOperationsInput | number
+  frequency?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   currentCycle?: Prisma.IntFieldUpdateOperationsInput | number
   totalCycles?: Prisma.IntFieldUpdateOperationsInput | number
@@ -679,6 +893,7 @@ export type CircleUncheckedUpdateWithoutMembersInput = {
   contributions?: Prisma.ContributionUncheckedUpdateManyWithoutCircleNestedInput
   activities?: Prisma.ActivityUncheckedUpdateManyWithoutCircleNestedInput
   invites?: Prisma.InviteUncheckedUpdateManyWithoutCircleNestedInput
+  escrow?: Prisma.EscrowUncheckedUpdateOneWithoutCircleNestedInput
 }
 
 export type CircleCreateWithoutContributionsInput = {
@@ -686,6 +901,7 @@ export type CircleCreateWithoutContributionsInput = {
   name: string
   description?: string
   monthlyContribution: number
+  frequency?: string
   status?: string
   currentCycle?: number
   totalCycles: number
@@ -693,16 +909,20 @@ export type CircleCreateWithoutContributionsInput = {
   endDate: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
+  leader: Prisma.UserCreateNestedOneWithoutLedCirclesInput
   members?: Prisma.CircleMemberCreateNestedManyWithoutCircleInput
   activities?: Prisma.ActivityCreateNestedManyWithoutCircleInput
   invites?: Prisma.InviteCreateNestedManyWithoutCircleInput
+  escrow?: Prisma.EscrowCreateNestedOneWithoutCircleInput
 }
 
 export type CircleUncheckedCreateWithoutContributionsInput = {
   id?: string
   name: string
   description?: string
+  leaderId: string
   monthlyContribution: number
+  frequency?: string
   status?: string
   currentCycle?: number
   totalCycles: number
@@ -713,6 +933,7 @@ export type CircleUncheckedCreateWithoutContributionsInput = {
   members?: Prisma.CircleMemberUncheckedCreateNestedManyWithoutCircleInput
   activities?: Prisma.ActivityUncheckedCreateNestedManyWithoutCircleInput
   invites?: Prisma.InviteUncheckedCreateNestedManyWithoutCircleInput
+  escrow?: Prisma.EscrowUncheckedCreateNestedOneWithoutCircleInput
 }
 
 export type CircleCreateOrConnectWithoutContributionsInput = {
@@ -736,6 +957,7 @@ export type CircleUpdateWithoutContributionsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   monthlyContribution?: Prisma.FloatFieldUpdateOperationsInput | number
+  frequency?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   currentCycle?: Prisma.IntFieldUpdateOperationsInput | number
   totalCycles?: Prisma.IntFieldUpdateOperationsInput | number
@@ -743,16 +965,20 @@ export type CircleUpdateWithoutContributionsInput = {
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  leader?: Prisma.UserUpdateOneRequiredWithoutLedCirclesNestedInput
   members?: Prisma.CircleMemberUpdateManyWithoutCircleNestedInput
   activities?: Prisma.ActivityUpdateManyWithoutCircleNestedInput
   invites?: Prisma.InviteUpdateManyWithoutCircleNestedInput
+  escrow?: Prisma.EscrowUpdateOneWithoutCircleNestedInput
 }
 
 export type CircleUncheckedUpdateWithoutContributionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  leaderId?: Prisma.StringFieldUpdateOperationsInput | string
   monthlyContribution?: Prisma.FloatFieldUpdateOperationsInput | number
+  frequency?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   currentCycle?: Prisma.IntFieldUpdateOperationsInput | number
   totalCycles?: Prisma.IntFieldUpdateOperationsInput | number
@@ -763,13 +989,15 @@ export type CircleUncheckedUpdateWithoutContributionsInput = {
   members?: Prisma.CircleMemberUncheckedUpdateManyWithoutCircleNestedInput
   activities?: Prisma.ActivityUncheckedUpdateManyWithoutCircleNestedInput
   invites?: Prisma.InviteUncheckedUpdateManyWithoutCircleNestedInput
+  escrow?: Prisma.EscrowUncheckedUpdateOneWithoutCircleNestedInput
 }
 
-export type CircleCreateWithoutActivitiesInput = {
+export type CircleCreateWithoutEscrowInput = {
   id?: string
   name: string
   description?: string
   monthlyContribution: number
+  frequency?: string
   status?: string
   currentCycle?: number
   totalCycles: number
@@ -777,16 +1005,116 @@ export type CircleCreateWithoutActivitiesInput = {
   endDate: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
+  leader: Prisma.UserCreateNestedOneWithoutLedCirclesInput
+  members?: Prisma.CircleMemberCreateNestedManyWithoutCircleInput
+  contributions?: Prisma.ContributionCreateNestedManyWithoutCircleInput
+  activities?: Prisma.ActivityCreateNestedManyWithoutCircleInput
+  invites?: Prisma.InviteCreateNestedManyWithoutCircleInput
+}
+
+export type CircleUncheckedCreateWithoutEscrowInput = {
+  id?: string
+  name: string
+  description?: string
+  leaderId: string
+  monthlyContribution: number
+  frequency?: string
+  status?: string
+  currentCycle?: number
+  totalCycles: number
+  startDate?: Date | string
+  endDate: Date | string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  members?: Prisma.CircleMemberUncheckedCreateNestedManyWithoutCircleInput
+  contributions?: Prisma.ContributionUncheckedCreateNestedManyWithoutCircleInput
+  activities?: Prisma.ActivityUncheckedCreateNestedManyWithoutCircleInput
+  invites?: Prisma.InviteUncheckedCreateNestedManyWithoutCircleInput
+}
+
+export type CircleCreateOrConnectWithoutEscrowInput = {
+  where: Prisma.CircleWhereUniqueInput
+  create: Prisma.XOR<Prisma.CircleCreateWithoutEscrowInput, Prisma.CircleUncheckedCreateWithoutEscrowInput>
+}
+
+export type CircleUpsertWithoutEscrowInput = {
+  update: Prisma.XOR<Prisma.CircleUpdateWithoutEscrowInput, Prisma.CircleUncheckedUpdateWithoutEscrowInput>
+  create: Prisma.XOR<Prisma.CircleCreateWithoutEscrowInput, Prisma.CircleUncheckedCreateWithoutEscrowInput>
+  where?: Prisma.CircleWhereInput
+}
+
+export type CircleUpdateToOneWithWhereWithoutEscrowInput = {
+  where?: Prisma.CircleWhereInput
+  data: Prisma.XOR<Prisma.CircleUpdateWithoutEscrowInput, Prisma.CircleUncheckedUpdateWithoutEscrowInput>
+}
+
+export type CircleUpdateWithoutEscrowInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  monthlyContribution?: Prisma.FloatFieldUpdateOperationsInput | number
+  frequency?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  currentCycle?: Prisma.IntFieldUpdateOperationsInput | number
+  totalCycles?: Prisma.IntFieldUpdateOperationsInput | number
+  startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  leader?: Prisma.UserUpdateOneRequiredWithoutLedCirclesNestedInput
+  members?: Prisma.CircleMemberUpdateManyWithoutCircleNestedInput
+  contributions?: Prisma.ContributionUpdateManyWithoutCircleNestedInput
+  activities?: Prisma.ActivityUpdateManyWithoutCircleNestedInput
+  invites?: Prisma.InviteUpdateManyWithoutCircleNestedInput
+}
+
+export type CircleUncheckedUpdateWithoutEscrowInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  leaderId?: Prisma.StringFieldUpdateOperationsInput | string
+  monthlyContribution?: Prisma.FloatFieldUpdateOperationsInput | number
+  frequency?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  currentCycle?: Prisma.IntFieldUpdateOperationsInput | number
+  totalCycles?: Prisma.IntFieldUpdateOperationsInput | number
+  startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  members?: Prisma.CircleMemberUncheckedUpdateManyWithoutCircleNestedInput
+  contributions?: Prisma.ContributionUncheckedUpdateManyWithoutCircleNestedInput
+  activities?: Prisma.ActivityUncheckedUpdateManyWithoutCircleNestedInput
+  invites?: Prisma.InviteUncheckedUpdateManyWithoutCircleNestedInput
+}
+
+export type CircleCreateWithoutActivitiesInput = {
+  id?: string
+  name: string
+  description?: string
+  monthlyContribution: number
+  frequency?: string
+  status?: string
+  currentCycle?: number
+  totalCycles: number
+  startDate?: Date | string
+  endDate: Date | string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  leader: Prisma.UserCreateNestedOneWithoutLedCirclesInput
   members?: Prisma.CircleMemberCreateNestedManyWithoutCircleInput
   contributions?: Prisma.ContributionCreateNestedManyWithoutCircleInput
   invites?: Prisma.InviteCreateNestedManyWithoutCircleInput
+  escrow?: Prisma.EscrowCreateNestedOneWithoutCircleInput
 }
 
 export type CircleUncheckedCreateWithoutActivitiesInput = {
   id?: string
   name: string
   description?: string
+  leaderId: string
   monthlyContribution: number
+  frequency?: string
   status?: string
   currentCycle?: number
   totalCycles: number
@@ -797,6 +1125,7 @@ export type CircleUncheckedCreateWithoutActivitiesInput = {
   members?: Prisma.CircleMemberUncheckedCreateNestedManyWithoutCircleInput
   contributions?: Prisma.ContributionUncheckedCreateNestedManyWithoutCircleInput
   invites?: Prisma.InviteUncheckedCreateNestedManyWithoutCircleInput
+  escrow?: Prisma.EscrowUncheckedCreateNestedOneWithoutCircleInput
 }
 
 export type CircleCreateOrConnectWithoutActivitiesInput = {
@@ -820,6 +1149,7 @@ export type CircleUpdateWithoutActivitiesInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   monthlyContribution?: Prisma.FloatFieldUpdateOperationsInput | number
+  frequency?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   currentCycle?: Prisma.IntFieldUpdateOperationsInput | number
   totalCycles?: Prisma.IntFieldUpdateOperationsInput | number
@@ -827,16 +1157,20 @@ export type CircleUpdateWithoutActivitiesInput = {
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  leader?: Prisma.UserUpdateOneRequiredWithoutLedCirclesNestedInput
   members?: Prisma.CircleMemberUpdateManyWithoutCircleNestedInput
   contributions?: Prisma.ContributionUpdateManyWithoutCircleNestedInput
   invites?: Prisma.InviteUpdateManyWithoutCircleNestedInput
+  escrow?: Prisma.EscrowUpdateOneWithoutCircleNestedInput
 }
 
 export type CircleUncheckedUpdateWithoutActivitiesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  leaderId?: Prisma.StringFieldUpdateOperationsInput | string
   monthlyContribution?: Prisma.FloatFieldUpdateOperationsInput | number
+  frequency?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   currentCycle?: Prisma.IntFieldUpdateOperationsInput | number
   totalCycles?: Prisma.IntFieldUpdateOperationsInput | number
@@ -847,6 +1181,7 @@ export type CircleUncheckedUpdateWithoutActivitiesInput = {
   members?: Prisma.CircleMemberUncheckedUpdateManyWithoutCircleNestedInput
   contributions?: Prisma.ContributionUncheckedUpdateManyWithoutCircleNestedInput
   invites?: Prisma.InviteUncheckedUpdateManyWithoutCircleNestedInput
+  escrow?: Prisma.EscrowUncheckedUpdateOneWithoutCircleNestedInput
 }
 
 export type CircleCreateWithoutInvitesInput = {
@@ -854,6 +1189,7 @@ export type CircleCreateWithoutInvitesInput = {
   name: string
   description?: string
   monthlyContribution: number
+  frequency?: string
   status?: string
   currentCycle?: number
   totalCycles: number
@@ -861,16 +1197,20 @@ export type CircleCreateWithoutInvitesInput = {
   endDate: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
+  leader: Prisma.UserCreateNestedOneWithoutLedCirclesInput
   members?: Prisma.CircleMemberCreateNestedManyWithoutCircleInput
   contributions?: Prisma.ContributionCreateNestedManyWithoutCircleInput
   activities?: Prisma.ActivityCreateNestedManyWithoutCircleInput
+  escrow?: Prisma.EscrowCreateNestedOneWithoutCircleInput
 }
 
 export type CircleUncheckedCreateWithoutInvitesInput = {
   id?: string
   name: string
   description?: string
+  leaderId: string
   monthlyContribution: number
+  frequency?: string
   status?: string
   currentCycle?: number
   totalCycles: number
@@ -881,6 +1221,7 @@ export type CircleUncheckedCreateWithoutInvitesInput = {
   members?: Prisma.CircleMemberUncheckedCreateNestedManyWithoutCircleInput
   contributions?: Prisma.ContributionUncheckedCreateNestedManyWithoutCircleInput
   activities?: Prisma.ActivityUncheckedCreateNestedManyWithoutCircleInput
+  escrow?: Prisma.EscrowUncheckedCreateNestedOneWithoutCircleInput
 }
 
 export type CircleCreateOrConnectWithoutInvitesInput = {
@@ -904,6 +1245,7 @@ export type CircleUpdateWithoutInvitesInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   monthlyContribution?: Prisma.FloatFieldUpdateOperationsInput | number
+  frequency?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   currentCycle?: Prisma.IntFieldUpdateOperationsInput | number
   totalCycles?: Prisma.IntFieldUpdateOperationsInput | number
@@ -911,16 +1253,20 @@ export type CircleUpdateWithoutInvitesInput = {
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  leader?: Prisma.UserUpdateOneRequiredWithoutLedCirclesNestedInput
   members?: Prisma.CircleMemberUpdateManyWithoutCircleNestedInput
   contributions?: Prisma.ContributionUpdateManyWithoutCircleNestedInput
   activities?: Prisma.ActivityUpdateManyWithoutCircleNestedInput
+  escrow?: Prisma.EscrowUpdateOneWithoutCircleNestedInput
 }
 
 export type CircleUncheckedUpdateWithoutInvitesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  leaderId?: Prisma.StringFieldUpdateOperationsInput | string
   monthlyContribution?: Prisma.FloatFieldUpdateOperationsInput | number
+  frequency?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   currentCycle?: Prisma.IntFieldUpdateOperationsInput | number
   totalCycles?: Prisma.IntFieldUpdateOperationsInput | number
@@ -931,6 +1277,77 @@ export type CircleUncheckedUpdateWithoutInvitesInput = {
   members?: Prisma.CircleMemberUncheckedUpdateManyWithoutCircleNestedInput
   contributions?: Prisma.ContributionUncheckedUpdateManyWithoutCircleNestedInput
   activities?: Prisma.ActivityUncheckedUpdateManyWithoutCircleNestedInput
+  escrow?: Prisma.EscrowUncheckedUpdateOneWithoutCircleNestedInput
+}
+
+export type CircleCreateManyLeaderInput = {
+  id?: string
+  name: string
+  description?: string
+  monthlyContribution: number
+  frequency?: string
+  status?: string
+  currentCycle?: number
+  totalCycles: number
+  startDate?: Date | string
+  endDate: Date | string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type CircleUpdateWithoutLeaderInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  monthlyContribution?: Prisma.FloatFieldUpdateOperationsInput | number
+  frequency?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  currentCycle?: Prisma.IntFieldUpdateOperationsInput | number
+  totalCycles?: Prisma.IntFieldUpdateOperationsInput | number
+  startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  members?: Prisma.CircleMemberUpdateManyWithoutCircleNestedInput
+  contributions?: Prisma.ContributionUpdateManyWithoutCircleNestedInput
+  activities?: Prisma.ActivityUpdateManyWithoutCircleNestedInput
+  invites?: Prisma.InviteUpdateManyWithoutCircleNestedInput
+  escrow?: Prisma.EscrowUpdateOneWithoutCircleNestedInput
+}
+
+export type CircleUncheckedUpdateWithoutLeaderInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  monthlyContribution?: Prisma.FloatFieldUpdateOperationsInput | number
+  frequency?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  currentCycle?: Prisma.IntFieldUpdateOperationsInput | number
+  totalCycles?: Prisma.IntFieldUpdateOperationsInput | number
+  startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  members?: Prisma.CircleMemberUncheckedUpdateManyWithoutCircleNestedInput
+  contributions?: Prisma.ContributionUncheckedUpdateManyWithoutCircleNestedInput
+  activities?: Prisma.ActivityUncheckedUpdateManyWithoutCircleNestedInput
+  invites?: Prisma.InviteUncheckedUpdateManyWithoutCircleNestedInput
+  escrow?: Prisma.EscrowUncheckedUpdateOneWithoutCircleNestedInput
+}
+
+export type CircleUncheckedUpdateManyWithoutLeaderInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  monthlyContribution?: Prisma.FloatFieldUpdateOperationsInput | number
+  frequency?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  currentCycle?: Prisma.IntFieldUpdateOperationsInput | number
+  totalCycles?: Prisma.IntFieldUpdateOperationsInput | number
+  startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 
@@ -995,7 +1412,9 @@ export type CircleSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   id?: boolean
   name?: boolean
   description?: boolean
+  leaderId?: boolean
   monthlyContribution?: boolean
+  frequency?: boolean
   status?: boolean
   currentCycle?: boolean
   totalCycles?: boolean
@@ -1003,10 +1422,12 @@ export type CircleSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   endDate?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  leader?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   members?: boolean | Prisma.Circle$membersArgs<ExtArgs>
   contributions?: boolean | Prisma.Circle$contributionsArgs<ExtArgs>
   activities?: boolean | Prisma.Circle$activitiesArgs<ExtArgs>
   invites?: boolean | Prisma.Circle$invitesArgs<ExtArgs>
+  escrow?: boolean | Prisma.Circle$escrowArgs<ExtArgs>
   _count?: boolean | Prisma.CircleCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["circle"]>
 
@@ -1014,7 +1435,9 @@ export type CircleSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
   id?: boolean
   name?: boolean
   description?: boolean
+  leaderId?: boolean
   monthlyContribution?: boolean
+  frequency?: boolean
   status?: boolean
   currentCycle?: boolean
   totalCycles?: boolean
@@ -1022,13 +1445,16 @@ export type CircleSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
   endDate?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  leader?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["circle"]>
 
 export type CircleSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   name?: boolean
   description?: boolean
+  leaderId?: boolean
   monthlyContribution?: boolean
+  frequency?: boolean
   status?: boolean
   currentCycle?: boolean
   totalCycles?: boolean
@@ -1036,13 +1462,16 @@ export type CircleSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
   endDate?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  leader?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["circle"]>
 
 export type CircleSelectScalar = {
   id?: boolean
   name?: boolean
   description?: boolean
+  leaderId?: boolean
   monthlyContribution?: boolean
+  frequency?: boolean
   status?: boolean
   currentCycle?: boolean
   totalCycles?: boolean
@@ -1052,30 +1481,40 @@ export type CircleSelectScalar = {
   updatedAt?: boolean
 }
 
-export type CircleOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "description" | "monthlyContribution" | "status" | "currentCycle" | "totalCycles" | "startDate" | "endDate" | "createdAt" | "updatedAt", ExtArgs["result"]["circle"]>
+export type CircleOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "description" | "leaderId" | "monthlyContribution" | "frequency" | "status" | "currentCycle" | "totalCycles" | "startDate" | "endDate" | "createdAt" | "updatedAt", ExtArgs["result"]["circle"]>
 export type CircleInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  leader?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   members?: boolean | Prisma.Circle$membersArgs<ExtArgs>
   contributions?: boolean | Prisma.Circle$contributionsArgs<ExtArgs>
   activities?: boolean | Prisma.Circle$activitiesArgs<ExtArgs>
   invites?: boolean | Prisma.Circle$invitesArgs<ExtArgs>
+  escrow?: boolean | Prisma.Circle$escrowArgs<ExtArgs>
   _count?: boolean | Prisma.CircleCountOutputTypeDefaultArgs<ExtArgs>
 }
-export type CircleIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
-export type CircleIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
+export type CircleIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  leader?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+}
+export type CircleIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  leader?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+}
 
 export type $CirclePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Circle"
   objects: {
+    leader: Prisma.$UserPayload<ExtArgs>
     members: Prisma.$CircleMemberPayload<ExtArgs>[]
     contributions: Prisma.$ContributionPayload<ExtArgs>[]
     activities: Prisma.$ActivityPayload<ExtArgs>[]
     invites: Prisma.$InvitePayload<ExtArgs>[]
+    escrow: Prisma.$EscrowPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     name: string
     description: string
+    leaderId: string
     monthlyContribution: number
+    frequency: string
     status: string
     currentCycle: number
     totalCycles: number
@@ -1477,10 +1916,12 @@ readonly fields: CircleFieldRefs;
  */
 export interface Prisma__CircleClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  leader<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   members<T extends Prisma.Circle$membersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Circle$membersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CircleMemberPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   contributions<T extends Prisma.Circle$contributionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Circle$contributionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ContributionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   activities<T extends Prisma.Circle$activitiesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Circle$activitiesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ActivityPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   invites<T extends Prisma.Circle$invitesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Circle$invitesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InvitePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  escrow<T extends Prisma.Circle$escrowArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Circle$escrowArgs<ExtArgs>>): Prisma.Prisma__EscrowClient<runtime.Types.Result.GetResult<Prisma.$EscrowPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1513,7 +1954,9 @@ export interface CircleFieldRefs {
   readonly id: Prisma.FieldRef<"Circle", 'String'>
   readonly name: Prisma.FieldRef<"Circle", 'String'>
   readonly description: Prisma.FieldRef<"Circle", 'String'>
+  readonly leaderId: Prisma.FieldRef<"Circle", 'String'>
   readonly monthlyContribution: Prisma.FieldRef<"Circle", 'Float'>
+  readonly frequency: Prisma.FieldRef<"Circle", 'String'>
   readonly status: Prisma.FieldRef<"Circle", 'String'>
   readonly currentCycle: Prisma.FieldRef<"Circle", 'Int'>
   readonly totalCycles: Prisma.FieldRef<"Circle", 'Int'>
@@ -1773,6 +2216,10 @@ export type CircleCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensio
    * The data used to create many Circles.
    */
   data: Prisma.CircleCreateManyInput | Prisma.CircleCreateManyInput[]
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CircleIncludeCreateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -1843,6 +2290,10 @@ export type CircleUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensio
    * Limit how many Circles to update.
    */
   limit?: number
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CircleIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -2005,6 +2456,25 @@ export type Circle$invitesArgs<ExtArgs extends runtime.Types.Extensions.Internal
   take?: number
   skip?: number
   distinct?: Prisma.InviteScalarFieldEnum | Prisma.InviteScalarFieldEnum[]
+}
+
+/**
+ * Circle.escrow
+ */
+export type Circle$escrowArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Escrow
+   */
+  select?: Prisma.EscrowSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Escrow
+   */
+  omit?: Prisma.EscrowOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.EscrowInclude<ExtArgs> | null
+  where?: Prisma.EscrowWhereInput
 }
 
 /**

@@ -38,6 +38,11 @@ export type CircleMember = Prisma.CircleMemberModel
  */
 export type Contribution = Prisma.ContributionModel
 /**
+ * Model Escrow
+ * 
+ */
+export type Escrow = Prisma.EscrowModel
+/**
  * Model Activity
  * 
  */

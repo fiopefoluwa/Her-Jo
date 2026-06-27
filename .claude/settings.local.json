@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx prisma *)",
+      "Bash(DATABASE_URL=\"file:./herjo.db\" npx prisma migrate dev --name add_paystack_escrow_bank_accounts)",
+      "Bash(npm install *)",
+      "Bash(node -e \"require\\('dotenv/config'\\)\")",
+      "Bash(npx dotenv-cli *)",
+      "Bash(curl -s http://localhost:3001/api/health)",
+      "Bash(python3 -m json.tool)",
+      "Bash(curl -s -X POST http://localhost:3001/api/auth/register -H 'Content-Type: application/json' -d '{\"name\":\"Test User\",\"email\":\"testpaystack@herjo.com\",\"password\":\"password123\"}')",
+      "Bash(curl -s http://localhost:3001/api/auth/me -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjbXF3bzA4ZGUwMDAwM21ycXJ2dnNqM21hIiwiaWF0IjoxNzgyNTgzMTkwLCJleHAiOjE3ODMxODc5OTB9.F73Z0EEHlg-BdkfVLs6gHnn8IkInILnB7XYe4CCw2S0')",
+      "Bash(pkill -f \"tsx src/server\")",
+      "Bash(pkill -f \"herjo\")"
+    ]
+  }
+}
