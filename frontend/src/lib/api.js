@@ -10,7 +10,7 @@
  *  - Throws an error with the API's error message on non-2xx status
  */
 
-const BASE = import.meta.env.VITE_API_URL ?? "/api";
+const BASE = import.meta.env.VITE_API_URL ?? (import.meta.env.DEV ? "/api" : "https://herjo-backend.onrender.com/api");
 
 export function getToken() {
   return localStorage.getItem("herjo_token");
