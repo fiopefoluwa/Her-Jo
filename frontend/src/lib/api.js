@@ -2,13 +2,15 @@
  * Central fetch helper for the HerJo API.
  *
  * Automatically:
- *  - Prefixes the base URL (proxied to http://localhost:3001 via Vite)
+ *  - Prefixes the base URL:
+ *      dev  → "/api"  (proxied to localhost:3001 via Vite)
+ *      prod → VITE_API_URL (https://herjo-backend.onrender.com/api)
  *  - Attaches `Authorization: Bearer <token>` from localStorage
  *  - Parses JSON responses
  *  - Throws an error with the API's error message on non-2xx status
  */
 
-const BASE = "/api";
+const BASE = import.meta.env.VITE_API_URL ?? "/api";
 
 export function getToken() {
   return localStorage.getItem("herjo_token");
