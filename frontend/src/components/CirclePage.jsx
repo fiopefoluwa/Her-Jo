@@ -62,7 +62,6 @@ export function CirclePage() {
   const [paymentOpen, setPaymentOpen] = useState(false);
 
   const handleMakeContribution = async () => {
-    // Called only after mock payment success.
     if (!circle) return;
 
     try {
@@ -74,12 +73,6 @@ export function CirclePage() {
         }),
       });
 
-      if (!res.ok) {
-        const err = await res.json();
-        throw new Error(err.error || "Failed to record contribution");
-      }
-
-      const result = await res.json();
       toast.success(`Contribution of ${circle.monthlyContributionFormatted} recorded! Your Trust Score is now ${result.user.trustScore}.`);
       
       // Refresh data
