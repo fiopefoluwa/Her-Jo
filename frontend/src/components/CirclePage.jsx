@@ -17,11 +17,7 @@ export function CirclePage() {
 
   const fetchCircleDetails = async () => {
     try {
-      const res = await fetch(`/api/circles/${id}`);
-      if (!res.ok) {
-        throw new Error("Circle not found");
-      }
-      const data = await res.json();
+      const data = await apiFetch(`/circles/${id}`);
       setCircle(data);
     } catch (err) {
       console.error("Error fetching circle details:", err);
@@ -31,15 +27,12 @@ export function CirclePage() {
 
   const fetchContributions = async () => {
     try {
-      const res = await fetch("/api/contributions");
-      if (res.ok) {
-        const data = await res.json();
-        // Filter contributions for this specific circle and user
-        const filtered = data.filter(
-          (c) => c.circleId === id && c.userId === "user-1" && c.action === "Contribution received"
-        );
-        setCircleContributions(filtered);
-      }
+      const data = await apiFetch("/contributions");
+      // Filter to contributions for this circle
+      const filtered = data.filter(
+        (c) => c.circleId === id && c.action === "Contribution received"
+      );
+      setCircleContributions(filtered);
     } catch (err) {
       console.error("Error fetching contributions:", err);
     }
@@ -57,19 +50,8 @@ export function CirclePage() {
 
   const handleTriggerPayout = async () => {
     try {
-      const res = await fetch(`/api/circles/${id}/payout`, {
-        method: "POST",
-      });
-
-      if (!res.ok) {
-        const err = await res.json();
-        throw new Error(err.error || "Failed to trigger payout");
-      }
-
-      const result = await res.json();
+      const result = await apiFetch(`/circles/${id}/payout`, { method: "POST" });
       toast.success(result.message || "Payout triggered successfully!");
-      
-      // Refresh data
       loadAllData();
     } catch (err) {
       console.error("Error triggering payout:", err);
@@ -84,14 +66,10 @@ export function CirclePage() {
     if (!circle) return;
 
     try {
-      const res = await fetch("/api/contributions", {
+      const result = await apiFetch("/contributions", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
         body: JSON.stringify({
           circleId: circle.id,
-          userId: "user-1",
           amount: circle.monthlyContribution,
         }),
       });
@@ -102,12 +80,10 @@ export function CirclePage() {
       }
 
       const result = await res.json();
-      toast.success(
-        `Contribution of ${circle.monthlyContributionFormatted} recorded! Your Trust Score is now ${result.user.trustScore}.`
-      );
-
-      // Refresh data so dashboard + activity update without page refresh.
-      await loadAllData();
+      toast.success(`Contribution of ${circle.monthlyContributionFormatted} recorded! Your Trust Score is now ${result.user.trustScore}.`);
+      
+      // Refresh data
+      loadAllData();
     } catch (err) {
       console.error("Error making contribution:", err);
       toast.error(err.message || "Failed to submit contribution");

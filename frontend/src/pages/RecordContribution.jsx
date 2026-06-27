@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { Button } from "../components/ui/button";
 import { Card } from "../components/ui/card";
 import { Input } from "../components/ui/input";
+import { apiFetch } from "../lib/api";
 import {
   ArrowLeft,
   DollarSign,
@@ -16,8 +17,6 @@ import {
 
 export function RecordContribution() {
   const { id } = useParams(); // circleId
-
-  const userId = "user-1";
 
   const [circle, setCircle] = useState(null);
   const [contributions, setContributions] = useState([]);
@@ -31,23 +30,14 @@ export function RecordContribution() {
   }, [contributions]);
 
   const fetchCircle = async () => {
-    const res = await fetch(`/api/circles/${id}`);
-    if (!res.ok) {
-      const err = await res.json().catch(() => ({}));
-      throw new Error(err.error || "Circle not found");
-    }
-    return res.json();
+    return apiFetch(`/circles/${id}`);
   };
 
   const fetchUserContributions = async () => {
-    const res = await fetch("/api/contributions");
-    if (!res.ok) return [];
-    const data = await res.json();
-
+    const data = await apiFetch("/contributions");
     return data.filter(
       (c) =>
         c.circleId === id &&
-        c.userId === userId &&
         c.action === "Contribution received"
     );
   };
@@ -88,22 +78,14 @@ export function RecordContribution() {
 
     setSubmitting(true);
     try {
-      const res = await fetch("/api/contributions", {
+      const result = await apiFetch("/contributions", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           circleId: circle.id,
-          userId,
           amount: amountNum,
         }),
       });
 
-      if (!res.ok) {
-        const err = await res.json().catch(() => ({}));
-        throw new Error(err.error || "Failed to record contribution");
-      }
-
-      const result = await res.json();
       toast.success(
         `Recorded! Trust Score: ${result?.user?.trustScore ?? "-"}`
       );

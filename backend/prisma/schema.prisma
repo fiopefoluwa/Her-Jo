@@ -1,0 +1,150 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id           String   @id @default(cuid())
+  name         String
+  email        String   @unique
+  phone        String?
+  passwordHash String
+  trustScore   Int      @default(50)
+  avatar       String
+
+  // Bank account details stored as JSON string
+  // { accountNumber, bankName, bankCode, accountName }
+  bankAccount           String?
+  // Paystack transfer recipient code — created when bank account is saved
+  paystackRecipientCode String?
+
+  joinedDate DateTime @default(now())
+
+  // Relations
+  circleMembers    CircleMember[]
+  contributions    Contribution[]
+  activities       Activity[]
+  sentInvites      Invite[]       @relation("InviteSender")
+  ledCircles       Circle[]       @relation("CircleLeader")
+  verifiedContribs Contribution[] @relation("ContribVerifier")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Circle {
+  id                  String   @id @default(cuid())
+  name                String
+  description         String   @default("")
+  leaderId            String
+  monthlyContribution Float
+  frequency           String   @default("monthly") // monthly | weekly | biweekly
+  status              String   @default("active")  // active | completed
+  currentCycle        Int      @default(1)
+  totalCycles         Int
+  startDate           DateTime @default(now())
+  endDate             DateTime
+
+  // Relations
+  leader        User           @relation("CircleLeader", fields: [leaderId], references: [id])
+  members       CircleMember[]
+  contributions Contribution[]
+  activities    Activity[]
+  invites       Invite[]
+  escrow        Escrow?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model CircleMember {
+  id       String @id @default(cuid())
+  userId   String
+  circleId String
+
+  position            Int
+  memberStatus        String    @default("pending") // pending | paid
+  scheduledPayoutDate DateTime
+  payoutReceived      Boolean   @default(false)
+  payoutReceivedAt    DateTime?
+
+  user   User   @relation(fields: [userId], references: [id])
+  circle Circle @relation(fields: [circleId], references: [id])
+
+  @@unique([userId, circleId])
+  @@unique([circleId, position])
+}
+
+model Contribution {
+  id       String @id @default(cuid())
+  userId   String
+  circleId String
+  amount   Float
+  note     String @default("")
+
+  // cash | digital
+  paymentType String @default("digital")
+  // pending_verification | verified | missed
+  status      String @default("verified")
+
+  // Paystack transaction reference (digital only)
+  paystackRef String?
+
+  // When this contribution was due — used to compute trust score delta
+  dueDate DateTime?
+
+  // Cash verification
+  verifiedAt   DateTime?
+  verifiedById String?
+
+  user       User    @relation(fields: [userId], references: [id])
+  circle     Circle  @relation(fields: [circleId], references: [id])
+  verifiedBy User?   @relation("ContribVerifier", fields: [verifiedById], references: [id])
+
+  createdAt DateTime @default(now())
+}
+
+model Escrow {
+  id       String  @id @default(cuid())
+  circleId String  @unique
+  balance  Float   @default(0)
+  locked   Boolean @default(true)
+
+  circle Circle @relation(fields: [circleId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Activity {
+  id       String  @id @default(cuid())
+  userId   String
+  circleId String?
+  action   String
+  amount   Float?
+  metadata String  @default("{}")
+
+  user   User    @relation(fields: [userId], references: [id])
+  circle Circle? @relation(fields: [circleId], references: [id])
+
+  createdAt DateTime @default(now())
+}
+
+model Invite {
+  id          String   @id @default(cuid())
+  circleId    String
+  invitedById String
+  email       String
+  token       String   @unique @default(cuid())
+  status      String   @default("pending") // pending | accepted | expired
+  expiresAt   DateTime
+
+  circle    Circle @relation(fields: [circleId], references: [id])
+  invitedBy User   @relation("InviteSender", fields: [invitedById], references: [id])
+
+  createdAt DateTime @default(now())
+}

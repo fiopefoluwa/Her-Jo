@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "../components/ui/button";
 import { Card } from "../components/ui/card";
 import { TrustScore } from "../components/TrustScore";
 import { Plus, ArrowRight, Users, Calendar, TrendingUp } from "lucide-react";
 import { motion } from "motion/react";
 import { toast } from "sonner";
+import { apiFetch } from "../lib/api";
 import {
   Dialog,
   DialogContent,
@@ -20,6 +21,9 @@ import { Textarea } from "../components/ui/textarea";
 import { Label } from "../components/ui/label";
 
 export function Dashboard() {
+  const navigate = useNavigate();
+
+
   const [userProfile, setUserProfile] = useState(null);
   const [savingsCircles, setSavingsCircles] = useState([]);
   const [recentActivity, setRecentActivity] = useState([]);
@@ -36,17 +40,14 @@ export function Dashboard() {
 
   const fetchUserProfile = async () => {
     try {
-      const res = await fetch("/api/users/user-1");
-      if (res.ok) {
-        const data = await res.json();
-        setUserProfile({
-          name: data.name,
-          trustScore: data.trustScore,
-          totalSaved: data.totalSavedFormatted,
-          activeCycles: data.activeCycles,
-          completedCycles: data.completedCycles,
-        });
-      }
+      const data = await apiFetch("/auth/me");
+      setUserProfile({
+        name: data.name,
+        trustScore: data.trustScore,
+        totalSaved: data.totalSavedFormatted,
+        activeCycles: data.activeCycles,
+        completedCycles: data.completedCycles,
+      });
     } catch (err) {
       console.error("Error fetching user profile:", err);
     }
@@ -54,11 +55,8 @@ export function Dashboard() {
 
   const fetchCircles = async () => {
     try {
-      const res = await fetch("/api/circles");
-      if (res.ok) {
-        const data = await res.json();
-        setSavingsCircles(data);
-      }
+      const data = await apiFetch("/circles");
+      setSavingsCircles(data);
     } catch (err) {
       console.error("Error fetching circles:", err);
     }
@@ -66,11 +64,8 @@ export function Dashboard() {
 
   const fetchActivities = async () => {
     try {
-      const res = await fetch("/api/contributions");
-      if (res.ok) {
-        const data = await res.json();
-        setRecentActivity(data);
-      }
+      const data = await apiFetch("/contributions");
+      setRecentActivity(data);
     } catch (err) {
       console.error("Error fetching activities:", err);
     }
@@ -101,11 +96,8 @@ export function Dashboard() {
     }
 
     try {
-      const response = await fetch("/api/circles", {
+      const newCircle = await apiFetch("/circles", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
         body: JSON.stringify({
           name,
           description,
@@ -114,12 +106,6 @@ export function Dashboard() {
         }),
       });
 
-      if (!response.ok) {
-        const err = await response.json();
-        throw new Error(err.error || "Failed to create circle");
-      }
-
-      const newCircle = await response.json();
       toast.success(`Savings circle "${newCircle.name}" created successfully!`);
 
       // Reset state and close dialog
