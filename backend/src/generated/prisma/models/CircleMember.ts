@@ -560,6 +560,7 @@ export type CircleMemberCreateOrConnectWithoutUserInput = {
 
 export type CircleMemberCreateManyUserInputEnvelope = {
   data: Prisma.CircleMemberCreateManyUserInput | Prisma.CircleMemberCreateManyUserInput[]
+  skipDuplicates?: boolean
 }
 
 export type CircleMemberUpsertWithWhereUniqueWithoutUserInput = {
@@ -619,6 +620,7 @@ export type CircleMemberCreateOrConnectWithoutCircleInput = {
 
 export type CircleMemberCreateManyCircleInputEnvelope = {
   data: Prisma.CircleMemberCreateManyCircleInput | Prisma.CircleMemberCreateManyCircleInput[]
+  skipDuplicates?: boolean
 }
 
 export type CircleMemberUpsertWithWhereUniqueWithoutCircleInput = {
@@ -1465,6 +1467,7 @@ export type CircleMemberCreateManyArgs<ExtArgs extends runtime.Types.Extensions.
    * The data used to create many CircleMembers.
    */
   data: Prisma.CircleMemberCreateManyInput | Prisma.CircleMemberCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1483,6 +1486,7 @@ export type CircleMemberCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Ex
    * The data used to create many CircleMembers.
    */
   data: Prisma.CircleMemberCreateManyInput | Prisma.CircleMemberCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

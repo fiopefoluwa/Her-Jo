@@ -680,6 +680,7 @@ export type ContributionCreateOrConnectWithoutUserInput = {
 
 export type ContributionCreateManyUserInputEnvelope = {
   data: Prisma.ContributionCreateManyUserInput | Prisma.ContributionCreateManyUserInput[]
+  skipDuplicates?: boolean
 }
 
 export type ContributionCreateWithoutVerifiedByInput = {
@@ -717,6 +718,7 @@ export type ContributionCreateOrConnectWithoutVerifiedByInput = {
 
 export type ContributionCreateManyVerifiedByInputEnvelope = {
   data: Prisma.ContributionCreateManyVerifiedByInput | Prisma.ContributionCreateManyVerifiedByInput[]
+  skipDuplicates?: boolean
 }
 
 export type ContributionUpsertWithWhereUniqueWithoutUserInput = {
@@ -804,6 +806,7 @@ export type ContributionCreateOrConnectWithoutCircleInput = {
 
 export type ContributionCreateManyCircleInputEnvelope = {
   data: Prisma.ContributionCreateManyCircleInput | Prisma.ContributionCreateManyCircleInput[]
+  skipDuplicates?: boolean
 }
 
 export type ContributionUpsertWithWhereUniqueWithoutCircleInput = {
@@ -1770,6 +1773,7 @@ export type ContributionCreateManyArgs<ExtArgs extends runtime.Types.Extensions.
    * The data used to create many Contributions.
    */
   data: Prisma.ContributionCreateManyInput | Prisma.ContributionCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1788,6 +1792,7 @@ export type ContributionCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Ex
    * The data used to create many Contributions.
    */
   data: Prisma.ContributionCreateManyInput | Prisma.ContributionCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

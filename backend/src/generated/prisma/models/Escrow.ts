@@ -1186,6 +1186,7 @@ export type EscrowCreateManyArgs<ExtArgs extends runtime.Types.Extensions.Intern
    * The data used to create many Escrows.
    */
   data: Prisma.EscrowCreateManyInput | Prisma.EscrowCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1204,6 +1205,7 @@ export type EscrowCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensio
    * The data used to create many Escrows.
    */
   data: Prisma.EscrowCreateManyInput | Prisma.EscrowCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

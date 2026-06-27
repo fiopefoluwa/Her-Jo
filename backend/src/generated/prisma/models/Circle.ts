@@ -763,6 +763,7 @@ export type CircleCreateOrConnectWithoutLeaderInput = {
 
 export type CircleCreateManyLeaderInputEnvelope = {
   data: Prisma.CircleCreateManyLeaderInput | Prisma.CircleCreateManyLeaderInput[]
+  skipDuplicates?: boolean
 }
 
 export type CircleUpsertWithWhereUniqueWithoutLeaderInput = {
@@ -2198,6 +2199,7 @@ export type CircleCreateManyArgs<ExtArgs extends runtime.Types.Extensions.Intern
    * The data used to create many Circles.
    */
   data: Prisma.CircleCreateManyInput | Prisma.CircleCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -2216,6 +2218,7 @@ export type CircleCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensio
    * The data used to create many Circles.
    */
   data: Prisma.CircleCreateManyInput | Prisma.CircleCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */
