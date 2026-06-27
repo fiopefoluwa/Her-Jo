@@ -156,6 +156,22 @@ export async function mockFetch(url, options = {}) {
 
     state.contributions.unshift(contribution);
 
+    // Update circle state so UI reflects payment status (pending -> paid)
+    // This mimics real backend behavior after successful payment.
+    const circle = state.circles.find((c) => c.id === circleId);
+    if (circle?.membersList?.length) {
+      circle.membersList = circle.membersList.map((m) => {
+        // In this mock, current user is always the member with isYou=true.
+        if (m.isYou) {
+          return { ...m, status: "paid" };
+        }
+        return m;
+      });
+
+      // Update aggregates if present.
+      // The UI uses circle.membersList?.filter(m=>m.status==='paid') for rotation progress.
+    }
+
     const trustScore = computeTrustScoreForUser(userId, added);
     return jsonResponse({
       user: { trustScore },

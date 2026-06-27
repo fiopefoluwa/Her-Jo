@@ -6,6 +6,7 @@ import { TrustScore } from "./TrustScore";
 import { ArrowLeft, Calendar, DollarSign, CheckCircle2, Clock } from "lucide-react";
 import { motion } from "motion/react";
 import { toast } from "sonner";
+import { PaymentModal } from "./payments/PaymentModal";
 
 export function CirclePage() {
   const { id } = useParams();
@@ -76,9 +77,12 @@ export function CirclePage() {
     }
   };
 
+  const [paymentOpen, setPaymentOpen] = useState(false);
+
   const handleMakeContribution = async () => {
+    // Called only after mock payment success.
     if (!circle) return;
-    
+
     try {
       const res = await fetch("/api/contributions", {
         method: "POST",
@@ -98,10 +102,12 @@ export function CirclePage() {
       }
 
       const result = await res.json();
-      toast.success(`Contribution of ${circle.monthlyContributionFormatted} recorded! Your Trust Score is now ${result.user.trustScore}.`);
-      
-      // Refresh data
-      loadAllData();
+      toast.success(
+        `Contribution of ${circle.monthlyContributionFormatted} recorded! Your Trust Score is now ${result.user.trustScore}.`
+      );
+
+      // Refresh data so dashboard + activity update without page refresh.
+      await loadAllData();
     } catch (err) {
       console.error("Error making contribution:", err);
       toast.error(err.message || "Failed to submit contribution");
@@ -137,6 +143,18 @@ export function CirclePage() {
 
   return (
     <div className="min-h-screen bg-background">
+      <PaymentModal
+        open={paymentOpen}
+        onOpenChange={setPaymentOpen}
+        circle={circle}
+        amount={circle?.monthlyContribution}
+        userId="user-1"
+        onPaymentSuccess={async () => {
+          await handleMakeContribution();
+          // handleMakeContribution already refreshes data.
+        }}
+      />
+
       {/* Header */}
       <header className="border-b border-border/40 bg-card">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
@@ -177,7 +195,7 @@ export function CirclePage() {
             
             <div className="flex gap-3">
               {isContributionPending && (
-                <Button onClick={handleMakeContribution} className="bg-primary hover:bg-primary/90">
+                <Button onClick={() => setPaymentOpen(true)} className="bg-primary hover:bg-primary/90">
                   Pay Contribution
                 </Button>
               )}
@@ -380,7 +398,7 @@ export function CirclePage() {
                   <p className="text-xs text-muted-foreground mb-4">
                     Your monthly contribution of {circle.monthlyContributionFormatted || `₦${circle.monthlyContribution?.toLocaleString()}`} is due for the current cycle.
                   </p>
-                  <Button className="w-full bg-primary hover:bg-primary/90" onClick={handleMakeContribution}>
+                  <Button className="w-full bg-primary hover:bg-primary/90" onClick={() => setPaymentOpen(true)}>
                     Pay {circle.monthlyContributionFormatted || `₦${circle.monthlyContribution?.toLocaleString()}`}
                   </Button>
                 </Card>
