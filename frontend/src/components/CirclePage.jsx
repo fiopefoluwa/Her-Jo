@@ -7,6 +7,7 @@ import { ArrowLeft, Calendar, DollarSign, CheckCircle2, Clock } from "lucide-rea
 import { motion } from "motion/react";
 import { toast } from "sonner";
 import { PaymentModal } from "./payments/PaymentModal";
+import { apiFetch } from "../lib/api";
 
 export function CirclePage() {
   const { id } = useParams();
