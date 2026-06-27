@@ -3,10 +3,10 @@ import { Link, useNavigate } from "react-router-dom";
 import { Button } from "../components/ui/button";
 import { Card } from "../components/ui/card";
 import { TrustScore } from "../components/TrustScore";
-import { Plus, ArrowRight, Users, Calendar, TrendingUp, LogOut } from "lucide-react";
+import { Plus, ArrowRight, Users, Calendar, TrendingUp } from "lucide-react";
 import { motion } from "motion/react";
 import { toast } from "sonner";
-import { apiFetch, clearToken } from "../lib/api";
+import { apiFetch } from "../lib/api";
 import {
   Dialog,
   DialogContent,
@@ -23,10 +23,7 @@ import { Label } from "../components/ui/label";
 export function Dashboard() {
   const navigate = useNavigate();
 
-  const handleLogout = () => {
-    clearToken();
-    navigate('/login');
-  };
+
   const [userProfile, setUserProfile] = useState(null);
   const [savingsCircles, setSavingsCircles] = useState([]);
   const [recentActivity, setRecentActivity] = useState([]);
