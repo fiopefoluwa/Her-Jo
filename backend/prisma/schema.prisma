@@ -1,0 +1,116 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model User {
+  id           String   @id @default(cuid())
+  name         String
+  email        String   @unique
+  phone        String?
+  passwordHash String
+  trustScore   Int      @default(50)
+  avatar       String   // initials e.g. "AO"
+  joinedDate   DateTime @default(now())
+
+  // Relations
+  circleMembers CircleMember[]
+  contributions Contribution[]
+  activities    Activity[]
+  sentInvites   Invite[]       @relation("InviteSender")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Circle {
+  id                         String   @id @default(cuid())
+  name                       String
+  description                String   @default("")
+  monthlyContribution        Float
+  status                     String   @default("active") // active | completed
+  currentCycle               Int      @default(1)
+  totalCycles                Int
+  startDate                  DateTime @default(now())
+  endDate                    DateTime
+
+  // Relations
+  members       CircleMember[]
+  contributions Contribution[]
+  activities    Activity[]
+  invites       Invite[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model CircleMember {
+  id       String @id @default(cuid())
+  userId   String
+  circleId String
+
+  // Rotation position (1-indexed). Determines payout order.
+  position          Int
+  // Member contribution status within the current cycle
+  memberStatus      String   @default("pending") // pending | paid
+  // Scheduled date this member receives the payout
+  scheduledPayoutDate DateTime
+  // Whether this member has received their payout
+  payoutReceived    Boolean  @default(false)
+  payoutReceivedAt  DateTime?
+
+  user   User   @relation(fields: [userId], references: [id])
+  circle Circle @relation(fields: [circleId], references: [id])
+
+  @@unique([userId, circleId])
+  @@unique([circleId, position])
+}
+
+model Contribution {
+  id       String @id @default(cuid())
+  userId   String
+  circleId String
+  amount   Float
+  note     String @default("")
+
+  user   User   @relation(fields: [userId], references: [id])
+  circle Circle @relation(fields: [circleId], references: [id])
+
+  createdAt DateTime @default(now())
+}
+
+model Activity {
+  id       String  @id @default(cuid())
+  userId   String
+  circleId String?
+  action   String  // "Contribution received" | "Payout completed" | "Circle started" | "Member joined"
+  amount   Float?
+  metadata String  @default("{}") // JSON string for extra data
+
+  user   User    @relation(fields: [userId], references: [id])
+  circle Circle? @relation(fields: [circleId], references: [id])
+
+  createdAt DateTime @default(now())
+}
+
+model Invite {
+  id          String   @id @default(cuid())
+  circleId    String
+  invitedById String
+  email       String
+  token       String   @unique @default(cuid())
+  status      String   @default("pending") // pending | accepted | expired
+  expiresAt   DateTime
+
+  circle     Circle @relation(fields: [circleId], references: [id])
+  invitedBy  User   @relation("InviteSender", fields: [invitedById], references: [id])
+
+  createdAt DateTime @default(now())
+}

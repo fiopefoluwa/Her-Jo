@@ -1,48 +1,61 @@
+import "dotenv/config";
 import express from "express";
 import cors from "cors";
+import { authMiddleware } from "./middleware/auth.js";
+import authRouter from "./routes/auth.js";
 import usersRouter from "./routes/users.js";
 import circlesRouter from "./routes/circles.js";
 import contributionsRouter from "./routes/contributions.js";
-import { authMiddleware } from "./middleware/auth.js";
+import invitesRouter from "./routes/invites.js";
+import { startPayoutScheduler } from "./jobs/payoutScheduler.js";
 
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-// Middleware
+// ── Middleware ────────────────────────────────────────────────────────────────
+
 app.use(cors({
   origin: ["http://localhost:5173", "http://localhost:3000"],
   credentials: true,
 }));
 app.use(express.json());
 
-// Apply auth middleware to all API routes
-app.use("/api", authMiddleware);
+// ── Public routes (no auth required) ─────────────────────────────────────────
 
-// Routes
-app.use("/api/users", usersRouter);
-app.use("/api/circles", circlesRouter);
-app.use("/api/contributions", contributionsRouter);
+app.use("/api/auth", authRouter);
+app.use("/api/invites", invitesRouter); // GET /:token is public; POST /:token/accept has its own guard
 
 // Health check
 app.get("/api/health", (req, res) => {
   res.json({
     status: "ok",
     name: "HerJo API",
-    version: "1.0.0",
+    version: "2.0.0",
     timestamp: new Date().toISOString(),
   });
 });
 
-// 404 handler
+// ── Protected routes (JWT required) ──────────────────────────────────────────
+
+app.use("/api", authMiddleware);
+app.use("/api/users", usersRouter);
+app.use("/api/circles", circlesRouter);
+app.use("/api/contributions", contributionsRouter);
+
+// ── 404 handler ───────────────────────────────────────────────────────────────
+
 app.use("/api/*", (req, res) => {
   res.status(404).json({ error: "Endpoint not found" });
 });
 
+// ── Start ─────────────────────────────────────────────────────────────────────
+
 app.listen(PORT, () => {
-  console.log(`\n  🏺 HerJo API Server`);
-  console.log(`  ──────────────────`);
-  console.log(`  Local:   http://localhost:${PORT}`);
-  console.log(`  Health:  http://localhost:${PORT}/api/health`);
-  console.log(`  Circles: http://localhost:${PORT}/api/circles`);
-  console.log(`  Users:   http://localhost:${PORT}/api/users/user-1\n`);
+  console.log(`\n  🏺 HerJo API Server v2.0`);
+  console.log(`  ─────────────────────────`);
+  console.log(`  Local:      http://localhost:${PORT}`);
+  console.log(`  Health:     http://localhost:${PORT}/api/health`);
+  console.log(`  Register:   POST http://localhost:${PORT}/api/auth/register`);
+  console.log(`  Login:      POST http://localhost:${PORT}/api/auth/login\n`);
+  startPayoutScheduler();
 });
