@@ -3,5 +3,14 @@
   "outputDirectory": "frontend/dist",
   "installCommand": "echo 'skip root install'",
   "framework": null,
+<<<<<<< HEAD
   "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
+=======
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+>>>>>>> ec146860c9b9736ecd31324a9e3a4704093846dc
 }
