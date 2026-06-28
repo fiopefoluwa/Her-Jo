@@ -93,7 +93,7 @@ export function PaymentModal({
 
   return (
     <Dialog open={open} onOpenChange={(v) => (v ? null : handleClose())}>
-      <DialogContent className="sm:max-w-[560px] bg-card border-border/40">
+      <DialogContent className="w-[calc(100%-2rem)] sm:max-w-[560px] bg-card border-border/40 max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="font-playfair text-2xl">Contribute to Circle</DialogTitle>
         </DialogHeader>

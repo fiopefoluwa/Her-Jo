@@ -1,5 +1,3 @@
-import { DEV_ROLE } from "../config/devRole";
-
 const makeRotation = () => [
   {
     position: 1,
@@ -22,12 +20,12 @@ const makeRotation = () => [
 ];
 
 const makeMembersList = (userRoleForYou) => [
-  { id: "m1", name: "Amina Okafor", avatar: "AO", trustScore: 87, status: "active", isYou: true, role: userRoleForYou },
-  { id: "m2", name: "Bisi Adekunle", avatar: "BA", trustScore: 80, status: "upcoming", isYou: false },
-  { id: "m3", name: "Chika Nwosu", avatar: "CN", trustScore: 76, status: "upcoming", isYou: false },
-  { id: "m4", name: "Tunde Adebayo", avatar: "TA", trustScore: 82, status: "paid", isYou: false },
-  { id: "m5", name: "Lara Musa", avatar: "LM", trustScore: 78, status: "paid", isYou: false },
-  { id: "m6", name: "Zainab Idris", avatar: "ZI", trustScore: 75, status: "pending", isYou: false },
+  { id: "m1", name: "Amina Okafor", avatar: "AO", trustScore: 92, status: "active", isYou: true, role: userRoleForYou },
+  { id: "m2", name: "Bisi Adekunle", avatar: "BA", trustScore: 80, status: "upcoming", isYou: false, role: "member" },
+  { id: "m3", name: "Chika Nwosu", avatar: "CN", trustScore: 76, status: "upcoming", isYou: false, role: "member" },
+  { id: "m4", name: "Tunde Adebayo", avatar: "TA", trustScore: 82, status: "paid", isYou: false, role: "member" },
+  { id: "m5", name: "Lara Musa", avatar: "LM", trustScore: 78, status: "paid", isYou: false, role: "member" },
+  { id: "m6", name: "Zainab Idris", avatar: "ZI", trustScore: 75, status: "pending", isYou: false, role: "member" },
 ];
 
 export const mockCircles = [
@@ -37,6 +35,7 @@ export const mockCircles = [
     description: "Monthly savings circle for trusted traders.",
     monthlyContribution: 50000,
     monthlyContributionFormatted: "₦50,000",
+    frequency: "Monthly",
     totalPool: 400000,
     totalPoolFormatted: "₦400,000",
     members: 8,
@@ -48,10 +47,12 @@ export const mockCircles = [
     daysUntilPayout: 5,
     status: "active",
     rotationSchedule: makeRotation(),
-    membersList: makeMembersList(DEV_ROLE),
-    currentUserRole: DEV_ROLE,
+    membersList: makeMembersList("leader"),
+    currentUserRole: "leader",
+    leaderId: "user-1",
+    inviteCode: "MWA-XK9P2R",
+    inviteLink: "https://herjo.app/join/MWA-XK9P2R",
     nextPayoutLabel: "Your Turn Soon",
-
   },
   {
     id: "circle-2",
@@ -59,6 +60,7 @@ export const mockCircles = [
     description: "Community circle for builders.",
     monthlyContribution: 75000,
     monthlyContributionFormatted: "₦75,000",
+    frequency: "Monthly",
     totalPool: 600000,
     totalPoolFormatted: "₦600,000",
     members: 8,
@@ -72,6 +74,8 @@ export const mockCircles = [
     rotationSchedule: makeRotation(),
     membersList: makeMembersList("member"),
     currentUserRole: "member",
+    leaderId: "user-2",
+    inviteCode: "DEV-RQ4M7N",
+    inviteLink: "https://herjo.app/join/DEV-RQ4M7N",
   },
 ];
-

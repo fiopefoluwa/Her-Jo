@@ -1,5 +1,5 @@
 import { USE_MOCK_DATA } from "../config/mockMode";
-import { mockUser } from "./mockUser";
+import { mockCurrentUser } from "./mockUser";
 import { mockCircles } from "./mockCircles";
 import { mockContributions } from "./mockContributions";
 
@@ -28,12 +28,16 @@ function errorResponse(error, status = 400) {
   };
 }
 
-function computeTrustScoreForUser(userId, addedAmount) {
-  // Lightweight deterministic mock.
-  // Keep payload shape consistent with real backend expectations.
-  const base = mockUser.trustScore;
+function computeTrustScore(addedAmount) {
+  const base = mockCurrentUser.trustScore;
   const bump = Math.min(20, Math.floor(addedAmount / 50000));
-  return Math.max(0, base + bump);
+  return Math.min(100, base + bump);
+}
+
+function generateInviteCode(circleName) {
+  const prefix = circleName.substring(0, 3).toUpperCase().replace(/[^A-Z]/g, "X");
+  const suffix = Math.random().toString(36).substring(2, 8).toUpperCase();
+  return `${prefix}-${suffix}`;
 }
 
 export function isMockEnabled() {
@@ -45,14 +49,18 @@ export async function mockFetch(url, options = {}) {
     throw new Error("Mock fetch called while USE_MOCK_DATA=false");
   }
 
-  // Small delay to mimic network
   await delay(100);
 
   const method = (options.method || "GET").toUpperCase();
 
+  // GET /api/auth/me — returns the static authenticated user
+  if (method === "GET" && (url === "/api/auth/me" || url === "/api/users/me")) {
+    return jsonResponse({ ...mockCurrentUser });
+  }
+
   // GET /api/users/:id
   if (method === "GET" && url.startsWith("/api/users/")) {
-    return jsonResponse({ ...mockUser });
+    return jsonResponse({ ...mockCurrentUser });
   }
 
   // GET /api/circles
@@ -64,26 +72,22 @@ export async function mockFetch(url, options = {}) {
   }
 
   // GET /api/circles/:id
-  if (method === "GET" && url.startsWith("/api/circles/")) {
+  if (method === "GET" && url.match(/^\/api\/circles\/[^/]+$/)) {
     const id = url.split("/api/circles/")[1];
     const found = state.circles.find((c) => c.id === id);
     if (!found) return errorResponse("Circle not found", 404);
     return jsonResponse(found);
   }
 
-  // POST /api/circles
+  // POST /api/circles — creator always becomes the leader
   if (method === "POST" && url === "/api/circles") {
     const body = JSON.parse(options.body || "{}");
 
     const id = `circle-${Date.now()}`;
-
     const monthlyContribution = Number(body.monthlyContribution || 0);
-    const totalPool = monthlyContribution * Number(body.members || 2) * 1; // simple
-
-    const leaderRole = "leader";
-    const memberRole = "member";
-    // Role is for dev/testing; defaults to leader.
-    const currentUserRole = body.role || body.currentUserRole || leaderRole;
+    const totalPool = monthlyContribution * Number(body.members || 2);
+    const inviteCode = generateInviteCode(body.name || "CIR");
+    const inviteLink = `https://herjo.app/join/${inviteCode}`;
 
     const circle = {
       id,
@@ -91,6 +95,7 @@ export async function mockFetch(url, options = {}) {
       description: body.description || "",
       monthlyContribution,
       monthlyContributionFormatted: `₦${monthlyContribution.toLocaleString()}`,
+      frequency: "Monthly",
       totalPool,
       totalPoolFormatted: `₦${totalPool.toLocaleString()}`,
       members: Number(body.members || 6),
@@ -102,28 +107,42 @@ export async function mockFetch(url, options = {}) {
       daysUntilPayout: 5,
       status: "active",
       rotationSchedule: [
-        { position: 1, name: "Amina Okafor", date: "Jan 15", status: "completed" },
+        { position: 1, name: mockCurrentUser.name, date: "Jan 15", status: "completed" },
         { position: 2, name: "Bisi Adekunle", date: "Feb 15", status: "active" },
         { position: 3, name: "Chika Nwosu", date: "Mar 15", status: "upcoming" },
       ],
-      // Provide membersList with role-based current user status.
       membersList: [
         {
           id: "m1",
-          name: "Amina Okafor",
-          avatar: "AO",
-          trustScore: 87,
+          name: mockCurrentUser.name,
+          avatar: mockCurrentUser.avatar,
+          trustScore: mockCurrentUser.trustScore,
           status: "pending",
           isYou: true,
-          role: currentUserRole,
+          role: "leader",
         },
-        { id: "m2", name: "Bisi Adekunle", avatar: "BA", trustScore: 80, status: "upcoming", isYou: false, role: memberRole },
+        { id: "m2", name: "Bisi Adekunle", avatar: "BA", trustScore: 80, status: "upcoming", isYou: false, role: "member" },
       ],
-      currentUserRole,
+      currentUserRole: "leader",
+      leaderId: mockCurrentUser.id,
+      inviteCode,
+      inviteLink,
     };
 
-
     state.circles.unshift(circle);
+
+    // Add a creation activity entry
+    state.contributions.unshift({
+      id: `act-${Date.now()}`,
+      circleId: id,
+      userId: mockCurrentUser.id,
+      amount: null,
+      amountFormatted: null,
+      date: new Date().toLocaleDateString(undefined, { year: "numeric", month: "short", day: "2-digit" }),
+      action: `${mockCurrentUser.name} created ${circle.name}`,
+      circle: circle.name,
+    });
+
     return jsonResponse(circle);
   }
 
@@ -135,44 +154,33 @@ export async function mockFetch(url, options = {}) {
   // POST /api/contributions
   if (method === "POST" && url === "/api/contributions") {
     const body = JSON.parse(options.body || "{}");
-
-    const { circleId, userId, amount } = body;
+    const { circleId, amount } = body;
     const added = Number(amount || 0);
+
+    const circle = state.circles.find((c) => c.id === circleId);
+    const circleName = circle?.name || "Unknown Circle";
 
     const id = `con_${Date.now()}`;
     const contribution = {
       id,
       circleId,
-      userId,
+      userId: mockCurrentUser.id,
       amount: added,
       amountFormatted: `₦${added.toLocaleString()}`,
-      date: new Date().toLocaleDateString(undefined, {
-        year: "numeric",
-        month: "short",
-        day: "2-digit",
-      }),
-      action: "Contribution received",
+      date: new Date().toLocaleDateString(undefined, { year: "numeric", month: "short", day: "2-digit" }),
+      action: `${mockCurrentUser.name} contributed ₦${added.toLocaleString()}`,
+      circle: circleName,
     };
 
     state.contributions.unshift(contribution);
 
-    // Update circle state so UI reflects payment status (pending -> paid)
-    // This mimics real backend behavior after successful payment.
-    const circle = state.circles.find((c) => c.id === circleId);
     if (circle?.membersList?.length) {
-      circle.membersList = circle.membersList.map((m) => {
-        // In this mock, current user is always the member with isYou=true.
-        if (m.isYou) {
-          return { ...m, status: "paid" };
-        }
-        return m;
-      });
-
-      // Update aggregates if present.
-      // The UI uses circle.membersList?.filter(m=>m.status==='paid') for rotation progress.
+      circle.membersList = circle.membersList.map((m) =>
+        m.isYou ? { ...m, status: "paid" } : m
+      );
     }
 
-    const trustScore = computeTrustScoreForUser(userId, added);
+    const trustScore = computeTrustScore(added);
     return jsonResponse({
       user: { trustScore },
       contribution,
@@ -186,4 +194,3 @@ export async function mockFetch(url, options = {}) {
 
   return errorResponse(`Unknown mock endpoint: ${url}`, 404);
 }
-

@@ -52,7 +52,7 @@ export function PaymentMethodSelector({ value, onChange, disabled }) {
         <div className="text-xs text-muted-foreground">Payment Method</div>
       </div>
 
-      <div className="grid md:grid-cols-3 gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         <MethodCard
           title="Wallet"
           subtitle="Fast pay from your wallet"
