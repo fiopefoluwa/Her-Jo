@@ -10,6 +10,8 @@ import { Plus, ArrowRight, Users, Calendar, TrendingUp } from "lucide-react";
 import { motion } from "motion/react";
 import { toast } from "sonner";
 import { apiFetch } from "../lib/api";
+import { frequencyLabel, frequencyAdverb } from "../lib/frequency";
+import { HerJoLogo } from "../components/HerJoLogo";
 import {
   Dialog,
   DialogContent,
@@ -36,6 +38,7 @@ export function Dashboard() {
   const [description, setDescription] = useState("");
   const [monthlyContribution, setMonthlyContribution] = useState("");
   const [members, setMembers] = useState("6");
+  const [frequency, setFrequency] = useState("monthly");
 
   const fetchCircles = async () => {
     try {
@@ -81,6 +84,7 @@ export function Dashboard() {
           description,
           monthlyContribution: Number(monthlyContribution),
           members: Number(members),
+          frequency,
         }),
       });
 
@@ -90,6 +94,7 @@ export function Dashboard() {
       setDescription("");
       setMonthlyContribution("");
       setMembers("6");
+      setFrequency("monthly");
       setIsOpen(false);
 
       loadData();
@@ -110,32 +115,21 @@ export function Dashboard() {
       {/* Header */}
       <header className="border-b border-border/40 bg-card relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-2">
-            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-              <span className="text-primary font-playfair font-bold text-lg sm:text-xl">H</span>
-            </div>
-            <span className="font-playfair font-bold text-lg sm:text-xl tracking-tight">HerJo</span>
-          </Link>
-
-          <nav className="flex items-center gap-2 sm:gap-4">
-            {/* Desktop nav links */}
-            <div className="hidden md:flex items-center gap-6">
-              <Link to="/dashboard" className="text-sm font-medium text-primary">
-                Dashboard
-              </Link>
-              <a href="#circles" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-                My Circles
-              </a>
-              <a href="#activity" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-                Activity
-              </a>
-            </div>
-
-            <ProfileAvatar />
-
-            {/* Mobile hamburger */}
+          {/* Left: hamburger on mobile, nav links on desktop */}
+          <div className="flex items-center gap-6">
             <MobileNavMenu items={mobileNavItems} />
-          </nav>
+            <div className="hidden md:flex items-center gap-6">
+              <Link to="/dashboard" className="text-sm font-medium text-primary">Dashboard</Link>
+              <a href="#circles" className="text-sm text-muted-foreground hover:text-foreground transition-colors">My Circles</a>
+              <a href="#activity" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Activity</a>
+            </div>
+          </div>
+
+          {/* Right: logo sitting right next to the profile avatar */}
+          <div className="flex items-center gap-3">
+            <HerJoLogo />
+            <ProfileAvatar />
+          </div>
         </div>
       </header>
 
@@ -243,10 +237,34 @@ export function Dashboard() {
                           className="bg-background border-border/40 min-h-[80px]"
                         />
                       </div>
+                      <div className="grid gap-2">
+                        <Label className="text-foreground">Contribution Frequency</Label>
+                        <div className="grid grid-cols-3 gap-2">
+                          {[
+                            { value: "daily", label: "Daily" },
+                            { value: "weekly", label: "Weekly" },
+                            { value: "monthly", label: "Monthly" },
+                          ].map((opt) => (
+                            <button
+                              key={opt.value}
+                              type="button"
+                              onClick={() => setFrequency(opt.value)}
+                              className={[
+                                "py-2 px-3 rounded-lg border-2 text-sm font-medium transition-all",
+                                frequency === opt.value
+                                  ? "border-primary bg-primary/10 text-primary"
+                                  : "border-border/40 bg-background text-muted-foreground hover:border-border hover:text-foreground",
+                              ].join(" ")}
+                            >
+                              {opt.label}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div className="grid gap-2">
                           <Label htmlFor="contribution" className="text-foreground">
-                            Monthly Contribution (₦)
+                            {frequencyLabel(frequency)} Contribution Amount (₦)
                           </Label>
                           <Input
                             id="contribution"
@@ -315,7 +333,7 @@ export function Dashboard() {
                               </span>
                               <span className="hidden sm:inline">•</span>
                               <span>
-                                {circle.monthlyContributionFormatted || `₦${circle.monthlyContribution?.toLocaleString()}`}/month
+                                {circle.monthlyContributionFormatted || `₦${circle.monthlyContribution?.toLocaleString()}`}/{frequencyAdverb(circle.frequency)}
                               </span>
                             </div>
                           </div>

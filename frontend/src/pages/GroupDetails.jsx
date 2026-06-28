@@ -17,6 +17,8 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { motion } from "motion/react";
+import { frequencyLabel } from "../lib/frequency";
+import { HerJoLogo } from "../components/HerJoLogo";
 
 export function GroupDetails() {
   const { id } = useParams();
@@ -140,14 +142,10 @@ export function GroupDetails() {
             <span className="hidden sm:inline text-sm">Back to Dashboard</span>
           </Link>
 
-          <div className="flex items-center gap-2">
-            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-              <span className="text-primary font-playfair font-bold text-lg sm:text-xl">H</span>
-            </div>
-            <span className="font-playfair font-bold text-lg sm:text-xl tracking-tight">HerJo</span>
+          <div className="flex items-center gap-3">
+            <HerJoLogo />
+            <ProfileAvatar />
           </div>
-
-          <ProfileAvatar />
         </div>
       </header>
 
@@ -191,7 +189,7 @@ export function GroupDetails() {
                   <DollarSign className="w-4 h-4 sm:w-5 sm:h-5 text-accent" />
                 </div>
                 <div className="min-w-0">
-                  <div className="text-xs text-muted-foreground">Your Share</div>
+                  <div className="text-xs text-muted-foreground">{frequencyLabel(circle.frequency)} Contribution</div>
                   <div className="font-semibold text-sm sm:text-base truncate">
                     {circle.monthlyContributionFormatted || `₦${circle.monthlyContribution?.toLocaleString()}`}
                   </div>

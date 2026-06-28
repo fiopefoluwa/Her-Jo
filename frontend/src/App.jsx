@@ -1,5 +1,6 @@
-import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import { RouterProvider, createBrowserRouter, Navigate } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
+import { useAuth } from "./context/AuthContext";
 import { Home } from "./pages/Home.jsx";
 import { Dashboard } from "./pages/Dashboard.jsx";
 import { CirclePage } from "./components/CirclePage.jsx";
@@ -9,15 +10,21 @@ import { RecordContribution } from "./pages/RecordContribution.jsx";
 import Login from "./pages/Login.jsx";
 import Register from "./pages/Register.jsx";
 
+function ProtectedRoute({ Component }) {
+  const user = useAuth();
+  if (!user) return <Navigate to="/login" replace />;
+  return <Component />;
+}
+
 const router = createBrowserRouter([
   { path: "/", Component: Home },
-  { path: "/dashboard", Component: Dashboard },
-  { path: "/circle/:id", Component: CirclePage },
-  { path: "/circle/:id/settings", Component: CircleSettings },
-  { path: "/group/:id", Component: GroupDetails },
-  { path: "/record-contribution/:id", Component: RecordContribution },
   { path: "/login", Component: Login },
   { path: "/register", Component: Register },
+  { path: "/dashboard", element: <ProtectedRoute Component={Dashboard} /> },
+  { path: "/circle/:id", element: <ProtectedRoute Component={CirclePage} /> },
+  { path: "/circle/:id/settings", element: <ProtectedRoute Component={CircleSettings} /> },
+  { path: "/group/:id", element: <ProtectedRoute Component={GroupDetails} /> },
+  { path: "/record-contribution/:id", element: <ProtectedRoute Component={RecordContribution} /> },
 ]);
 
 export default function App() {

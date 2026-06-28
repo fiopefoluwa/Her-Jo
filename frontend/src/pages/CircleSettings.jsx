@@ -9,13 +9,17 @@ import { ArrowLeft, Users, Zap, ChevronRight } from "lucide-react";
 import { motion } from "motion/react";
 import { toast } from "sonner";
 import { apiFetch } from "../lib/api";
+import { frequencyLabel } from "../lib/frequency";
+import { HerJoLogo } from "../components/HerJoLogo";
 import { RoleGuard } from "../components/RoleGuard";
 import { InviteSection } from "../components/InviteSection";
 import { ProfileAvatar } from "../components/ProfileAvatar";
+import { useAuth } from "../context/AuthContext";
 
 export function CircleSettings() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const user = useAuth();
   const [circle, setCircle] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -54,7 +58,16 @@ export function CircleSettings() {
   if (!circle) return null;
 
   return (
-    <RoleGuard role={circle.currentUserRole} circleId={id}>
+    <RoleGuard
+      role={
+        circle.isLeader === true ||
+        circle.currentUserRole === "leader" ||
+        (user?.id && circle.leaderId === user.id)
+          ? "leader"
+          : "member"
+      }
+      circleId={id}
+    >
       <div className="min-h-screen bg-background">
         {/* Header */}
         <header className="border-b border-border/40 bg-card">
@@ -67,14 +80,10 @@ export function CircleSettings() {
               <span className="hidden sm:inline text-sm">Back to Circle</span>
             </Link>
 
-            <div className="flex items-center gap-2">
-              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                <span className="text-primary font-playfair font-bold text-lg sm:text-xl">H</span>
-              </div>
-              <span className="font-playfair font-bold text-lg sm:text-xl tracking-tight">HerJo</span>
+            <div className="flex items-center gap-3">
+              <HerJoLogo />
+              <ProfileAvatar />
             </div>
-
-            <ProfileAvatar />
           </div>
         </header>
 
@@ -116,7 +125,7 @@ export function CircleSettings() {
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div className="space-y-2">
-                        <Label className="text-foreground">Contribution Amount</Label>
+                        <Label className="text-foreground">{frequencyLabel(circle.frequency)} Contribution Amount</Label>
                         <Input
                           value={circle.monthlyContributionFormatted || `₦${circle.monthlyContribution?.toLocaleString()}`}
                           readOnly
@@ -145,10 +154,7 @@ export function CircleSettings() {
               >
                 <Card className="p-4 sm:p-6 md:p-8 border-border/40">
                   <h2 className="font-playfair font-bold text-lg sm:text-xl mb-4 sm:mb-6">Invite Members</h2>
-                  <InviteSection
-                    inviteCode={circle.inviteCode}
-                    inviteLink={circle.inviteLink}
-                  />
+                  <InviteSection circleId={id} />
                 </Card>
               </motion.div>
             </div>

@@ -7,6 +7,8 @@ import { ProfileAvatar } from "./ProfileAvatar";
 import { LeaderActions } from "./LeaderActions";
 import { useAuth } from "../context/AuthContext";
 import { ArrowLeft, Calendar, DollarSign, CheckCircle2, Clock } from "lucide-react";
+import { frequencyLabel, frequencyAdverb } from "../lib/frequency";
+import { HerJoLogo } from "./HerJoLogo";
 import { motion } from "motion/react";
 import { toast } from "sonner";
 import { PaymentModal } from "./payments/PaymentModal";
@@ -105,7 +107,10 @@ export function CirclePage() {
     );
   }
 
-  const isLeader = circle.currentUserRole === "leader";
+  const isLeader =
+    circle.isLeader === true ||
+    circle.currentUserRole === "leader" ||
+    (user?.id && circle.leaderId === user.id);
   const currentUserMember = circle.membersList?.find((m) => m.isYou);
   const isContributionPending = currentUserMember?.status === "pending";
   const totalContributed = circleContributions.reduce((sum, c) => sum + (c.amount || 0), 0);
@@ -118,7 +123,19 @@ export function CirclePage() {
         circle={circle}
         amount={circle?.monthlyContribution}
         userId={user.id}
-        onPaymentSuccess={async () => {
+        onPaymentSuccess={async ({ amount }) => {
+          // Optimistically add to the contributions list so the total updates immediately
+          setCircleContributions((prev) => [
+            {
+              id: `local-${Date.now()}`,
+              circleId: circle.id,
+              amount: amount || circle.monthlyContribution,
+              amountFormatted: `₦${(amount || circle.monthlyContribution).toLocaleString()}`,
+              date: "Just now",
+              action: "contributed",
+            },
+            ...prev,
+          ]);
           await handleMakeContribution();
         }}
       />
@@ -134,14 +151,10 @@ export function CirclePage() {
             <span className="hidden sm:inline text-sm">Back to Dashboard</span>
           </Link>
 
-          <div className="flex items-center gap-2 flex-shrink-0">
-            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-              <span className="text-primary font-playfair font-bold text-lg sm:text-xl">H</span>
-            </div>
-            <span className="font-playfair font-bold text-lg sm:text-xl tracking-tight">HerJo</span>
+          <div className="flex items-center gap-3">
+            <HerJoLogo />
+            <ProfileAvatar />
           </div>
-
-          <ProfileAvatar />
         </div>
       </header>
 
@@ -200,7 +213,7 @@ export function CirclePage() {
                   <DollarSign className="w-4 h-4 sm:w-5 sm:h-5 text-accent" />
                 </div>
                 <div className="min-w-0">
-                  <div className="text-xs text-muted-foreground">Your Share</div>
+                  <div className="text-xs text-muted-foreground">{frequencyLabel(circle.frequency)} Contribution</div>
                   <div className="font-semibold text-sm sm:text-base truncate">
                     {circle.monthlyContributionFormatted || `₦${circle.monthlyContribution?.toLocaleString()}`}
                   </div>
@@ -355,10 +368,10 @@ export function CirclePage() {
               <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}>
                 <Card className="p-4 sm:p-6 border-primary/30 bg-primary/5 shadow-md">
                   <h4 className="font-playfair font-bold text-base sm:text-lg mb-2 text-foreground">
-                    Monthly Contribution Due
+                    {frequencyLabel(circle.frequency)} Contribution Due
                   </h4>
                   <p className="text-xs text-muted-foreground mb-4">
-                    Your monthly contribution of{" "}
+                    Your {frequencyAdverb(circle.frequency)} contribution of{" "}
                     {circle.monthlyContributionFormatted || `₦${circle.monthlyContribution?.toLocaleString()}`} is due
                     for the current cycle.
                   </p>
