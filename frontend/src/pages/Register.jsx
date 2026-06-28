@@ -1,10 +1,14 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { Sparkles, Loader2 } from 'lucide-react';
 import { apiFetch, setToken, setStoredUser } from '../lib/api';
+import { useSetAuth } from '../context/AuthContext';
 
 export default function Register() {
   const navigate = useNavigate();
+  const setAuth = useSetAuth();
+  const [searchParams] = useSearchParams();
+  const inviteToken = searchParams.get('token');
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
@@ -40,7 +44,12 @@ export default function Register() {
 
       setToken(data.token);
       setStoredUser(data.user);
-      navigate('/dashboard');
+      setAuth(data.user);
+      if (inviteToken) {
+        navigate(`/invite/${inviteToken}`);
+      } else {
+        navigate('/dashboard');
+      }
     } catch (err) {
       setError(err.message || 'Registration failed. Please try again.');
     } finally {
@@ -57,7 +66,9 @@ export default function Register() {
         </div>
         <div className="bg-white p-8 rounded-3xl shadow-sm border border-warmgray-200">
           <h1 className="text-2xl font-bold text-warmgray-900">Create your account</h1>
-          <p className="text-warmgray-500 text-sm mt-1">Start building your financial identity</p>
+          <p className="text-warmgray-500 text-sm mt-1">
+            {inviteToken ? "Sign up to join your savings circle" : "Start building your financial identity"}
+          </p>
 
           {error && (
             <div className="mt-4 p-3 rounded-xl bg-red-50 border border-red-200 text-red-700 text-sm">

@@ -1,6 +1,6 @@
 // pages/Login.jsx
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { Sparkles, Loader2 } from 'lucide-react';
 import { apiFetch, setToken, setStoredUser } from '../lib/api';
 import { useSetAuth } from '../context/AuthContext';
@@ -8,6 +8,8 @@ import { useSetAuth } from '../context/AuthContext';
 export default function Login() {
   const navigate = useNavigate();
   const setAuth = useSetAuth();
+  const [searchParams] = useSearchParams();
+  const inviteToken = searchParams.get('token');
   const [identifier, setIdentifier] = useState(''); // email or phone
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
@@ -34,7 +36,7 @@ export default function Login() {
       setToken(data.token);
       setStoredUser(data.user);
       setAuth(data.user);
-      navigate('/dashboard');
+      navigate(inviteToken ? `/invite/${inviteToken}` : '/dashboard');
     } catch (err) {
       setError(err.message || 'Login failed. Please check your credentials.');
     } finally {

@@ -19,6 +19,7 @@ import { toast } from "sonner";
 import { motion } from "motion/react";
 import { frequencyLabel } from "../lib/frequency";
 import { HerJoLogo } from "../components/HerJoLogo";
+import { apiFetch } from "../lib/api";
 
 export function GroupDetails() {
   const { id } = useParams();
@@ -34,19 +35,10 @@ export function GroupDetails() {
     return contributions.reduce((sum, c) => sum + (c.amount || 0), 0);
   }, [contributions]);
 
-  const fetchCircleDetails = async () => {
-    const res = await fetch(`/api/circles/${id}`);
-    if (!res.ok) {
-      const err = await res.json().catch(() => ({}));
-      throw new Error(err.error || "Circle not found");
-    }
-    return res.json();
-  };
+  const fetchCircleDetails = async () => apiFetch(`/circles/${id}`);
 
   const fetchContributions = async () => {
-    const res = await fetch("/api/contributions");
-    if (!res.ok) return [];
-    const data = await res.json();
+    const data = await apiFetch("/contributions").catch(() => []);
     return data.filter(
       (c) => c.circleId === id && c.userId === userId && c.action?.includes("contributed")
     );
@@ -86,18 +78,10 @@ export function GroupDetails() {
 
     setSubmitting(true);
     try {
-      const res = await fetch("/api/contributions", {
+      const result = await apiFetch("/contributions", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ circleId: circle.id, userId, amount: amountNum }),
+        body: JSON.stringify({ circleId: circle.id, amount: amountNum }),
       });
-
-      if (!res.ok) {
-        const err = await res.json().catch(() => ({}));
-        throw new Error(err.error || "Failed to record contribution");
-      }
-
-      const result = await res.json();
       toast.success(`Contribution recorded! Trust Score: ${result?.user?.trustScore ?? "-"}`);
       await loadAllData();
     } catch (e) {
