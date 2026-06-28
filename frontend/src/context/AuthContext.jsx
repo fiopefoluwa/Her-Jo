@@ -19,23 +19,27 @@ function normalizeUser(raw) {
   };
 }
 
-const AuthContext = createContext(null);
+const AuthContext = createContext({ user: null, setUser: () => {} });
 
 export function AuthProvider({ children }) {
   const storedUser = normalizeUser(getStoredUser());
   const hasToken = !!getToken();
 
-  // Only show loading if a token exists but we don't yet have user data
   const [user, setUser] = useState(storedUser);
   const [loading, setLoading] = useState(hasToken && !storedUser);
 
   useEffect(() => {
-    if (!hasToken) return; // no token — don't call the API, render children as-is
+    if (!hasToken) return;
 
     apiFetch("/auth/me")
       .then((data) => setUser(normalizeUser(data)))
-      .catch(() => {})
+      .catch((err) => {
+        console.error("Auth/me failed:", err);
+        // If /auth/me fails, clear the bad token so ProtectedRoute can send user to /login.
+        clearToken?.();
+      })
       .finally(() => setLoading(false));
+
   }, []);
 
   if (loading) {
@@ -46,9 +50,17 @@ export function AuthProvider({ children }) {
     );
   }
 
-  return <AuthContext.Provider value={user}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={{ user, setUser }}>
+      {children}
+    </AuthContext.Provider>
+  );
 }
 
 export function useAuth() {
-  return useContext(AuthContext);
+  return useContext(AuthContext).user;
+}
+
+export function useSetAuth() {
+  return useContext(AuthContext).setUser;
 }

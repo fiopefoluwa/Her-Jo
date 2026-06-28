@@ -151,8 +151,27 @@ export async function mockFetch(url, options = {}) {
     return jsonResponse(state.contributions);
   }
 
+  // POST /api/circles/:id/invite (mock)
+  if (method === "POST" && url.match(/^\/api\/circles\/[^/]+\/invite$/)) {
+    // In mock mode, generate a general join link that anyone with the link can use.
+    const circleId = url.split("/api/circles/")[1].split("/invite")[0];
+
+    // Keep it deterministic enough for debugging, but still unique.
+    const seed = circleId + "-" + Date.now();
+    const suffix = Math.random().toString(36).substring(2, 8).toUpperCase();
+    const code = `JOIN-${suffix}`;
+    const inviteUrl = `https://herjo.app/join/${code}`;
+
+    return jsonResponse({
+      inviteUrl,
+      email: null,
+      code,
+    });
+  }
+
   // POST /api/contributions
   if (method === "POST" && url === "/api/contributions") {
+
     const body = JSON.parse(options.body || "{}");
     const { circleId, amount } = body;
     const added = Number(amount || 0);

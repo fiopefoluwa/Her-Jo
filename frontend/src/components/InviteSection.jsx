@@ -8,25 +8,30 @@ import { apiFetch } from "../lib/api";
 
 export function InviteSection({ circleId }) {
   const [email, setEmail] = useState("");
+
+  // This is a UI-only input. The backend invite API is treated as a general invite link
+  // for anyone with the link to sign up. We still keep the input field to avoid changing
+  // existing UI layouts, but it is no longer used for invite generation.
+
   const [sending, setSending] = useState(false);
   const [generatedUrl, setGeneratedUrl] = useState("");
   const [copied, setCopied] = useState(false);
 
   const handleGenerate = async () => {
-    if (!email.trim()) {
-      toast.error("Enter an email address to invite");
-      return;
-    }
-
     setSending(true);
+
     try {
       const result = await apiFetch(`/circles/${circleId}/invite`, {
         method: "POST",
-        body: JSON.stringify({ email: email.trim() }),
+        // Intentionally do NOT bind invites to a specific user/email.
+        // The invite link returned by the backend is treated as a general
+        // link (anyone with the link can sign up).
+        body: JSON.stringify({}),
       });
 
       setGeneratedUrl(result.inviteUrl);
-      toast.success(`Invite created for ${result.email}`);
+      toast.success("Invite link created!");
+
     } catch (err) {
       toast.error(err.message || "Failed to create invite");
     } finally {
@@ -62,16 +67,17 @@ export function InviteSection({ circleId }) {
   return (
     <div className="space-y-5">
       <div className="space-y-2">
-        <Label className="text-foreground">Member's Email Address</Label>
+        <Label className="text-foreground">Invite Link (General)</Label>
         <div className="flex gap-2">
           <Input
-            type="email"
+            type="text"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            placeholder="e.g. bisi@example.com"
+            placeholder="Optional email (not required)"
             className="border-border/40"
             onKeyDown={(e) => e.key === "Enter" && handleGenerate()}
           />
+
           <Button
             onClick={handleGenerate}
             disabled={sending}
@@ -82,13 +88,17 @@ export function InviteSection({ circleId }) {
           </Button>
         </div>
         <p className="text-xs text-muted-foreground">
-          Enter the email of the person you want to invite, then copy or share the link with them.
+          Generate a general invite link. Anyone with the link can sign up—email is optional.
         </p>
+
       </div>
 
       {generatedUrl && (
         <div className="space-y-3 p-4 rounded-lg bg-accent/5 border border-accent/20">
+
+
           <Label className="text-foreground text-sm">Invite Link</Label>
+
           <div className="flex gap-2">
             <Input
               value={generatedUrl}
@@ -114,8 +124,9 @@ export function InviteSection({ circleId }) {
           </Button>
 
           <p className="text-xs text-muted-foreground">
-            This link expires in 7 days and is valid only for {email}.
+            This link expires in 7 days. Anyone with the link can sign up.
           </p>
+
         </div>
       )}
     </div>

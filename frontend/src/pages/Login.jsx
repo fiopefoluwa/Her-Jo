@@ -3,9 +3,11 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Sparkles, Loader2 } from 'lucide-react';
 import { apiFetch, setToken, setStoredUser } from '../lib/api';
+import { useSetAuth } from '../context/AuthContext';
 
 export default function Login() {
   const navigate = useNavigate();
+  const setAuth = useSetAuth();
   const [identifier, setIdentifier] = useState(''); // email or phone
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
@@ -31,6 +33,7 @@ export default function Login() {
 
       setToken(data.token);
       setStoredUser(data.user);
+      setAuth(data.user);
       navigate('/dashboard');
     } catch (err) {
       setError(err.message || 'Login failed. Please check your credentials.');
@@ -67,7 +70,7 @@ export default function Login() {
                 onChange={(e) => setIdentifier(e.target.value)}
                 required
                 className="mt-1 w-full px-4 py-3 rounded-xl border border-warmgray-200 focus:outline-none focus:ring-2 focus:ring-terracotta-300"
-                placeholder="080 1234 5678 or amina@herjo.app"
+                placeholder="080 1234 5678 or your@email.com"
               />
             </div>
             <div>
@@ -108,10 +111,6 @@ export default function Login() {
           </p>
         </div>
 
-        {/* Quick demo hint */}
-        <p className="mt-4 text-center text-xs text-warmgray-400">
-          Demo: <span className="font-mono">amina@herjo.app</span> / <span className="font-mono">herjo123</span>
-        </p>
       </div>
     </div>
   );
